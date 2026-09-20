@@ -512,6 +512,28 @@
     state.room = room; state.lastRoundId = room.round.roundId; state.revealed = false; render();
   }
 
+  async function markImpostorCardRead(){
+    const room = await loadRoom(state.roomCode) || state.room;
+    if(!room?.round || room.round.votingOpen || room.round.answerRevealed) return;
+    room.round.readers = room.round.readers || {};
+    room.round.readers[state.playerId] = true;
+    const allRead = room.players.every(p => room.round.readers[p.id]);
+    if(allRead && !room.round.discussionEndsAt){
+      room.round.discussionEndsAt = Date.now() + 60000;
+      room.round.discussionStarted = true;
+    }
+    await saveRoom(room); state.room=room; render();
+    if(state.isHost && allRead) scheduleDiscussionEnd(room.round.roundId);
+  }
+  let discussionTimer = null;
+  function scheduleDiscussionEnd(roundId){
+    if(discussionTimer) clearTimeout(discussionTimer);
+    discussionTimer = setTimeout(async()=>{
+      const room = await loadRoom(state.roomCode) || state.room;
+      if(!room?.round || room.round.roundId!==roundId || !room.round.discussionStarted || room.round.votingOpen) return;
+      await startImpostorVote();
+    }, Math.max(0,(state.room?.round?.discussionEndsAt||Date.now())-Date.now()));
+  }
   async function startImpostorVote(){
     const room = await loadRoom(state.roomCode) || state.room;
     if(!room || !room.round || room.round.votingOpen) return;
@@ -551,12 +573,6 @@
   }
   function roomRoundDeadline(roundId){
     return state.room?.round?.roundId===roundId ? (state.room.round.voteEndsAt||Date.now()) : Date.now();
-  }
-  async function handleRevealAnswer(){
-    const room = await loadRoom(state.roomCode) || state.room;
-    if(room.round) room.round.answerRevealed = true;
-    await saveRoom(room);
-    state.room = room; render();
   }
 
   function handleLeaveImpostor(){
@@ -1116,6 +1132,13 @@
         <div class="answer-banner">🏆 O impostor era <b>${esc(round.impostorName)}</b> — a palavra era <b>${esc(round.word)}</b>.</div>
       ` : ''}
       ${round.voteResult ? `<div class="answer-banner">${round.voteResult.type==='ejected' ? `🚀 ${esc(round.voteResult.playerName)} foi expulso!` : `⏭️ ${esc(round.voteResult.message)}`}</div>` : ''}
+      ${!round.votingOpen && !round.voteResult && !round.answerRevealed ? `
+        <div class="section-title">LEITURA DAS CARTAS</div>
+        <div class="hint">Quando terminar de ler sua carta, confirme abaixo. A conversa começa quando todos confirmarem.</div>
+        <div class="hint">Cartas lidas: ${Object.keys(round.readers||{}).length}/${room.players.length}</div>
+        ${(round.readers||{})[state.playerId] ? `<div class="hint">Você já confirmou a leitura.</div>` : `<button class="btn btn-primary btn-sm" id="impostor-card-read">Já li minha carta</button>`}
+        ${round.discussionStarted ? `<div class="section-title">TEMPO PARA CONVERSAR</div><div class="hint" id="discussion-countdown">Tempo para conversar: ${Math.max(0,Math.ceil(((round.discussionEndsAt||Date.now())-Date.now())/1000))}s. Falem sobre o tema sem dizer a palavra!</div>` : ''}
+      ` : ''}
       ${round.votingOpen ? `
         <div class="section-title">REUNIÃO — VOTAR PARA EXPULSAR</div>
         <div class="hint" id="impostor-vote-countdown">Tempo restante: ${Math.max(0,Math.ceil(((round.voteEndsAt||Date.now())-Date.now())/1000))}s</div>
@@ -1126,11 +1149,9 @@
       ` : ''}
       ${state.isHost ? `
         <div class="host-controls">
-          ${!round.votingOpen && !round.voteResult && !round.answerRevealed ? `<button class="btn btn-primary btn-sm" id="open-impostor-vote">Iniciar reunião (60s)</button>` : ''}
-          ${!round.answerRevealed ? `<button class="btn btn-gold btn-sm" id="reveal-answer">Revelar impostor</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="new-round">Nova rodada</button>
         </div>
-        <div class="hint">Inicie a reunião: cada jogador pode votar em alguém ou pular. Ao fim de 60 segundos, o resultado é exibido.</div>
+        <div class="hint">Depois da conversa, a votação começa automaticamente. Cada jogador pode votar em alguém ou pular; o resultado aparece ao fim do tempo.</div>
       ` : `<div class="hint">Converse com o grupo e tentem descobrir quem é o impostor.</div>`}
     `;
   }
@@ -1547,8 +1568,12 @@
     if($('start-round')) $('start-round').onclick = handleStartRound;
     if($('flip-card')) $('flip-card').onclick = () => { state.revealed = !state.revealed; render(); };
     if($('hide-card')) $('hide-card').onclick = () => { state.revealed = false; render(); };
-    if($('reveal-answer')) $('reveal-answer').onclick = handleRevealAnswer;
-    if($('open-impostor-vote')) $('open-impostor-vote').onclick = startImpostorVote;
+    if($('impostor-card-read')) $('impostor-card-read').onclick = markImpostorCardRead;
+    if(state.screen==='reveal' && state.room?.round?.discussionStarted && !state.room.round.votingOpen){
+      if(state.isHost && !discussionTimer) scheduleDiscussionEnd(state.room.round.roundId);
+      const el=$('discussion-countdown');
+      if(el){ if(window.discussionCountdown) clearInterval(window.discussionCountdown); window.discussionCountdown=setInterval(()=>{ const left=Math.max(0,Math.ceil(((state.room?.round?.discussionEndsAt||Date.now())-Date.now())/1000)); const node=$('discussion-countdown'); if(node) node.textContent='Tempo para conversar: '+left+'s. Falem sobre o tema sem dizer a palavra!'; if(left<=0) clearInterval(window.discussionCountdown); },250); }
+    }
     if(state.screen==='reveal' && state.room?.round?.votingOpen){
       const roundId=state.room.round.roundId;
       if(state.isHost && !impostorVoteTimer) scheduleImpostorVoteEnd(roundId);
