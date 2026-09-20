@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
+<title>Impostor — Cultura Pop</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#100c1f;
+    --bg-2:#180f2e;
+    --surface:#1e1740;
+    --surface-2:#271d52;
+    --line:rgba(255,255,255,0.09);
+    --pink:#ff4d79;
+    --pink-deep:#c81e52;
+    --gold:#ffc93f;
+    --cyan:#3fe0c5;
+    --text:#f5f2ff;
+    --muted:#a79fc9;
+    --radius:18px;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    min-height:100vh;
+    background:
+      radial-gradient(circle at 15% 0%, #341a52 0%, transparent 45%),
+      radial-gradient(circle at 100% 20%, #4a1338 0%, transparent 40%),
+      linear-gradient(180deg, var(--bg-2), var(--bg) 60%);
+    color:var(--text);
+    font-family:'Sora', system-ui, sans-serif;
+    display:flex;
+    justify-content:center;
+    -webkit-tap-highlight-color:transparent;
+  }
+  #app{
+    width:100%;
+    max-width:460px;
+    min-height:100vh;
+    padding:22px 18px 40px;
+    display:flex;
+    flex-direction:column;
+  }
+  h1,h2,h3{
+    font-family:'Anton', sans-serif;
+    font-weight:400;
+    letter-spacing:0.5px;
+    margin:0;
+  }
+  .brand{
+    display:flex;
+    align-items:baseline;
+    justify-content:space-between;
+    margin-bottom:8px;
+  }
+  .brand-title{
+    font-size:30px;
+    background:linear-gradient(90deg,var(--pink),var(--gold));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  .brand-code{
+    font-family:'Sora',sans-serif;
+    font-size:13px;
+    font-weight:700;
+    color:var(--muted);
+    border:1px solid var(--line);
+    padding:5px 10px;
+    border-radius:999px;
+  }
+  .tagline{
+    color:var(--muted);
+    font-size:15px;
+    line-height:1.5;
+    margin:2px 0 28px;
+  }
+  .stack{ display:flex; flex-direction:column; gap:14px; }
+  .card-panel{
+    background:var(--surface);
+    border:1px solid var(--line);
+    border-radius:var(--radius);
+    padding:20px;
+  }
+  label.field-label{
+    display:block;
+    font-size:13px;
+    color:var(--muted);
+    margin:0 0 8px 2px;
+    font-weight:600;
+  }
+  input[type=text]{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:'Sora',sans-serif;
+    font-size:17px;
+    font-weight:600;
+    padding:14px 16px;
+    border-radius:12px;
+    outline:none;
+  }
+  input[type=text]:focus{ border-color:var(--pink); }
+  input[type=text]::placeholder{ color:#6e6693; font-weight:500; }
+  .btn{
+    border:none;
+    border-radius:14px;
+    padding:16px 18px;
+    font-family:'Sora',sans-serif;
+    font-weight:700;
+    font-size:16px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    width:100%;
+  }
+  .btn-primary{
+    background:linear-gradient(90deg,var(--pink),var(--pink-deep));
+    color:#fff;
+    box-shadow:0 10px 24px -10px rgba(255,77,121,0.6);
+  }
+  .btn-primary:disabled{
+    opacity:0.4;
+    box-shadow:none;
+    cursor:not-allowed;
+  }
+  .btn-ghost{
+    background:transparent;
+    color:var(--text);
+    border:1.5px solid var(--line);
+  }
+  .btn-gold{
+    background:linear-gradient(90deg,var(--gold),#ff9d3f);
+    color:#231402;
+  }
+  .btn-sm{ padding:11px 14px; font-size:13.5px; border-radius:11px; }
+  .home-hero{
+    margin-top:6px;
+    padding:26px 20px;
+    border-radius:20px;
+    background:var(--surface);
+    border:1px solid var(--line);
+    text-align:center;
+  }
+  .home-hero .masks{ font-size:44px; margin-bottom:8px; }
+  .home-hero p{ color:var(--muted); font-size:14.5px; line-height:1.55; margin:8px 0 0; }
+  .cat-strip{
+    display:flex;
+    gap:8px;
+    justify-content:center;
+    margin-top:16px;
+    flex-wrap:wrap;
+  }
+  .cat-pill{
+    font-size:12.5px;
+    font-weight:700;
+    padding:6px 12px;
+    border-radius:999px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--muted);
+  }
+  .back-link{
+    background:none;
+    border:none;
+    color:var(--muted);
+    font-family:'Sora',sans-serif;
+    font-weight:600;
+    font-size:14px;
+    padding:6px 0 18px;
+    cursor:pointer;
+    text-align:left;
+    width:fit-content;
+  }
+  .chip-grid{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:10px;
+  }
+  .chip{
+    border:1.5px solid var(--line);
+    background:var(--surface-2);
+    border-radius:14px;
+    padding:14px 10px;
+    text-align:center;
+    cursor:pointer;
+    font-weight:700;
+    font-size:14px;
+    color:var(--muted);
+  }
+  .chip .emoji{ display:block; font-size:22px; margin-bottom:6px; }
+  .chip.active{
+    border-color:var(--pink);
+    background:linear-gradient(160deg, rgba(255,77,121,0.18), rgba(255,201,63,0.10));
+    color:var(--text);
+  }
+  .error-text{
+    color:#ff8a8a;
+    font-size:13.5px;
+    font-weight:600;
+    margin-top:2px;
+  }
+  .ticket{
+    position:relative;
+    background:linear-gradient(135deg,var(--surface-2),var(--surface));
+    border:1.5px dashed rgba(255,255,255,0.25);
+    border-radius:16px;
+    padding:22px 18px;
+    text-align:center;
+    overflow:hidden;
+  }
+  .ticket::before, .ticket::after{
+    content:"";
+    position:absolute;
+    width:22px; height:22px;
+    background:var(--bg);
+    border-radius:50%;
+    top:50%; transform:translateY(-50%);
+  }
+  .ticket::before{ left:-11px; }
+  .ticket::after{ right:-11px; }
+  .ticket .lbl{
+    font-size:12px;
+    letter-spacing:1px;
+    color:var(--muted);
+    font-weight:700;
+    margin-bottom:6px;
+  }
+  .ticket .code{
+    font-family:'Anton',sans-serif;
+    font-size:42px;
+    letter-spacing:6px;
+    background:linear-gradient(90deg,var(--gold),var(--pink));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+  }
+  .section-title{
+    font-size:13px;
+    font-weight:700;
+    color:var(--muted);
+    margin:22px 0 10px 2px;
+  }
+  .player-list{ display:flex; flex-direction:column; gap:8px; }
+  .player-row{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    border-radius:12px;
+    padding:10px 14px;
+    font-weight:600;
+    font-size:14.5px;
+  }
+  .player-row .dot{
+    width:8px; height:8px; border-radius:50%;
+    background:var(--cyan);
+    flex-shrink:0;
+  }
+  .player-row .host-tag{
+    margin-left:auto;
+    font-size:11px;
+    color:var(--gold);
+    font-weight:800;
+    letter-spacing:0.5px;
+  }
+  select{
+    width:100%;
+    background:var(--surface-2);
+    border:1px solid var(--line);
+    color:var(--text);
+    font-family:'Sora',sans-serif;
+    font-weight:600;
+    font-size:15px;
+    padding:13px 14px;
+    border-radius:12px;
+    outline:none;
+  }
+  .hint{
+    color:var(--muted);
+    font-size:13px;
+    text-align:center;
+    margin-top:10px;
+    line-height:1.5;
+  }
+  .pulse{
+    display:inline-block;
+    width:9px; height:9px;
+    border-radius:50%;
+    background:var(--pink);
+    margin-right:7px;
+    animation:pulse 1.4s infinite ease-in-out;
+    vertical-align:middle;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:1; transform:scale(1); }
+    50%{ opacity:0.35; transform:scale(0.7); }
+  }
+  .waiting-box{
+    text-align:center;
+    padding:34px 16px;
+    color:var(--muted);
+    font-weight:600;
+    font-size:14.5px;
+  }
+  .scene{ perspective:1400px; margin-top:6px; }
+  .card3d{
+    position:relative;
+    width:100%;
+    aspect-ratio:3/4;
+    transform-style:preserve-3d;
+    transition:transform 0.65s cubic-bezier(.2,.8,.2,1);
+    cursor:pointer;
+  }
+  .card3d.flipped{ transform:rotateY(180deg); }
+  .face{
+    position:absolute; inset:0;
+    backface-visibility:hidden;
+    border-radius:22px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    padding:26px;
+    text-align:center;
+    border:1.5px solid var(--line);
+  }
+  .face-back{
+    background:
+      repeating-linear-gradient(135deg, rgba(255,255,255,0.03) 0 10px, transparent 10px 20px),
+      linear-gradient(160deg,var(--surface-2),var(--surface));
+  }
+  .face-back .icon{ font-size:52px; margin-bottom:14px; }
+  .face-back .tap-txt{ font-weight:700; color:var(--muted); font-size:14.5px; }
+  .face-front{
+    transform:rotateY(180deg);
+    background:linear-gradient(160deg,var(--surface-2),var(--surface));
+  }
+  .face-front.is-impostor{
+    background:linear-gradient(160deg,#5a1030,#2a0a1e);
+    border-color:rgba(255,201,63,0.4);
+  }
+  .face-front .cat-tag{
+    font-size:13px;
+    font-weight:800;
+    letter-spacing:0.5px;
+    color:var(--muted);
+    margin-bottom:14px;
+  }
+  .face-front.is-impostor .cat-tag{ color:#ffb9cf; }
+  .face-front .word-big{
+    font-family:'Anton',sans-serif;
+    font-size:34px;
+    line-height:1.15;
+    color:var(--text);
+  }
+  .face-front.is-impostor .word-big{
+    background:linear-gradient(90deg,var(--gold),var(--pink));
+    -webkit-background-clip:text; background-clip:text; color:transparent;
+    font-size:30px;
+  }
+  .face-front .flavor{
+    margin-top:16px;
+    font-size:13.5px;
+    color:var(--muted);
+    line-height:1.5;
+  }
+  .answer-banner{
+    margin-top:16px;
+    background:var(--surface);
+    border:1px solid rgba(255,201,63,0.35);
+    border-radius:14px;
+    padding:14px 16px;
+    text-align:center;
+    font-size:14px;
+    font-weight:600;
+    line-height:1.5;
+  }
+  .answer-banner b{ color:var(--gold); }
+  .host-controls{
+    margin-top:18px;
+    display:flex;
+    gap:10px;
+  }
+  .footer-note{
+    margin-top:auto;
+    padding-top:26px;
+    color:#544d78;
+    font-size:11.5px;
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(function(){
+  const CATEGORY_META = {
+    animes: { label:'Animes', emoji:'⛩️' },
+    series: { label:'Séries', emoji:'📺' },
+    filmes: { label:'Filmes', emoji:'🎬' },
+    jogos:  { label:'Jogos',  emoji:'🎮' }
+  };
+
+  const WORD_BANKS = {
+    animes: ['Naruto','One Piece','Attack on Titan','Death Note','Dragon Ball Z','Demon Slayer','My Hero Academia','Fullmetal Alchemist','Jujutsu Kaisen','Sailor Moon','Cowboy Bebop','Evangelion','Bleach','Hunter x Hunter','Tokyo Ghoul','One Punch Man','Spy x Family','Chainsaw Man','Sword Art Online','Fairy Tail','Code Geass','Vinland Saga','Dr. Stone','Haikyuu!!'],
+    series: ['Stranger Things','Breaking Bad','Game of Thrones','Friends','The Office','La Casa de Papel','Round 6','Wednesday','The Crown','Peaky Blinders','The Witcher','Dark','Chernobyl','The Boys','Sherlock','Grey\'s Anatomy','How I Met Your Mother','Better Call Saul','Bridgerton','The Mandalorian','Ted Lasso','Euphoria','Black Mirror','The Walking Dead'],
+    filmes: ['Titanic','Vingadores: Ultimato','O Poderoso Chefão','Matrix','Interestelar','O Senhor dos Anéis','Star Wars','Jurassic Park','De Volta para o Futuro','Coringa','Pantera Negra','Homem-Aranha','Harry Potter','Toy Story','Frozen','Shrek','Cidade de Deus','Tropa de Elite','Parasita','La La Land','Duna','Barbie','Oppenheimer','A Origem'],
+    jogos:  ['Minecraft','Fortnite','GTA V','The Legend of Zelda','FIFA','League of Legends','Among Us','Free Fire','Roblox','Valorant','Counter-Strike','Call of Duty','The Last of Us','God of War','Red Dead Redemption','Mario Kart','Pokémon','Super Mario Bros','Cyberpunk 2077','Elden Ring','Animal Crossing','Street Fighter','Genshin Impact','Stardew Valley']
+  };
+
+  const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  function generateCode(){
+    let c=''; for(let i=0;i<5;i++) c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];
+    return c;
+  }
+  function generateId(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+
+  let state = {
+    screen:'home',
+    playerId:null,
+    playerName:'',
+    roomCode:null,
+    isHost:false,
+    room:null,
+    revealed:false,
+    lastRoundId:null,
+    error:'',
+    createCats: new Set(['animes','series','filmes','jogos']),
+    roundCatChoice:'random',
+    joinName:'',
+    joinCode:'',
+    createName:'',
+    busy:false
+  };
+
+  let pollTimer = null;
+  function startPolling(){
+    stopPolling();
+    pollTimer = setInterval(pollRoom, 2200);
+  }
+  function stopPolling(){
+    if(pollTimer){ clearInterval(pollTimer); pollTimer=null; }
+  }
+
+  async function saveRoom(room){
+    await window.storage.set('room:'+room.code, JSON.stringify(room), true);
+  }
+  async function loadRoom(code){
+    try{
+      const res = await window.storage.get('room:'+code, true);
+      if(!res || !res.value) return null;
+      return JSON.parse(res.value);
+    }catch(e){ return null; }
+  }
+
+  async function pollRoom(){
+    if(!state.roomCode) return;
+    const room = await loadRoom(state.roomCode);
+    if(!room) return;
+    state.room = room;
+    if(room.status==='playing' && room.round && room.round.roundId !== state.lastRoundId){
+      state.lastRoundId = room.round.roundId;
+      state.revealed = false;
+      state.screen = 'reveal';
+    } else if(room.status==='lobby' && state.screen==='reveal'){
+      state.screen = 'lobby';
+      state.lastRoundId = null;
+    }
+    if(state.screen==='lobby' || state.screen==='reveal') render();
+  }
+
+  function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+
+  async function handleCreateRoom(){
+    const name = state.createName.trim();
+    if(!name){ state.error='Digite seu nome.'; render(); return; }
+    if(state.createCats.size===0){ state.error='Escolha ao menos uma categoria.'; render(); return; }
+    state.error='';
+    const playerId = generateId();
+    const code = generateCode();
+    const room = {
+      code,
+      hostId: playerId,
+      categories: Array.from(state.createCats),
+      players: [{ id: playerId, name }],
+      status: 'lobby',
+      round: null,
+      usedWords: [],
+      createdAt: Date.now()
+    };
+    state.busy = true; render();
+    await saveRoom(room);
+    state.playerId = playerId;
+    state.playerName = name;
+    state.roomCode = code;
+    state.isHost = true;
+    state.room = room;
+    state.screen = 'lobby';
+    state.lastRoundId = null;
+    state.busy = false;
+    render();
+    startPolling();
+  }
+
+  async function handleJoinRoom(){
+    const name = state.joinName.trim();
+    const code = state.joinCode.trim().toUpperCase();
+    if(!name){ state.error='Digite seu nome.'; render(); return; }
+    if(!code){ state.error='Digite o código da sala.'; render(); return; }
+    state.busy = true; render();
+    const room = await loadRoom(code);
+    if(!room){
+      state.error='Sala não encontrada. Confira o código.';
+      state.busy = false;
+      render();
+      return;
+    }
+    const playerId = generateId();
+    room.players.push({ id: playerId, name });
+    await saveRoom(room);
+    state.error='';
+    state.playerId = playerId;
+    state.playerName = name;
+    state.roomCode = code;
+    state.isHost = false;
+    state.room = room;
+    state.screen = room.status==='playing' ? 'lobby' : 'lobby';
+    state.lastRoundId = room.status==='playing' ? null : null;
+    state.busy = false;
+    render();
+    startPolling();
+  }
+
+  async function handleStartRound(){
+    if(!state.room) return;
+    const room = await loadRoom(state.roomCode) || state.room;
+    if(room.players.length < 3){
+      state.error='Mínimo de 3 jogadores para começar.';
+      render();
+      return;
+    }
+    const cat = state.roundCatChoice==='random'
+      ? pickRandom(room.categories)
+      : state.roundCatChoice;
+    let pool = WORD_BANKS[cat].filter(w => !(room.usedWords||[]).includes(w));
+    if(pool.length===0) pool = WORD_BANKS[cat];
+    const word = pickRandom(pool);
+    const impostor = pickRandom(room.players);
+    room.status = 'playing';
+    room.round = {
+      category: cat,
+      word,
+      impostorId: impostor.id,
+      impostorName: impostor.name,
+      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6),
+      answerRevealed:false
+    };
+    room.usedWords = [...(room.usedWords||[]), word].slice(-12);
+    state.error='';
+    await saveRoom(room);
+    state.room = room;
+    state.lastRoundId = room.round.roundId;
+    state.revealed = false;
+    state.screen = 'reveal';
+    render();
+  }
+
+  async function handleNewRound(){
+    const room = await loadRoom(state.roomCode) || state.room;
+    const cat = pickRandom(room.categories);
+    let pool = WORD_BANKS[cat].filter(w => !(room.usedWords||[]).includes(w));
+    if(pool.length===0) pool = WORD_BANKS[cat];
+    const word = pickRandom(pool);
+    const impostor = pickRandom(room.players);
+    room.status = 'playing';
+    room.round = {
+      category: cat,
+      word,
+      impostorId: impostor.id,
+      impostorName: impostor.name,
+      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6),
+      answerRevealed:false
+    };
+    room.usedWords = [...(room.usedWords||[]), word].slice(-12);
+    await saveRoom(room);
+    state.room = room;
+    state.lastRoundId = room.round.roundId;
+    state.revealed = false;
+    render();
+  }
+
+  async function handleRevealAnswer(){
+    const room = await loadRoom(state.roomCode) || state.room;
+    if(room.round) room.round.answerRevealed = true;
+    await saveRoom(room);
+    state.room = room;
+    render();
+  }
+
+  async function handleBackToLobby(){
+    const room = await loadRoom(state.roomCode) || state.room;
+    room.status = 'lobby';
+    room.round = null;
+    await saveRoom(room);
+    state.room = room;
+    state.lastRoundId = null;
+    state.screen = 'lobby';
+    render();
+  }
+
+  function handleLeave(){
+    stopPolling();
+    state = {
+      screen:'home', playerId:null, playerName:'', roomCode:null, isHost:false,
+      room:null, revealed:false, lastRoundId:null, error:'',
+      createCats:new Set(['animes','series','filmes','jogos']),
+      roundCatChoice:'random', joinName:'', joinCode:'', createName:'', busy:false
+    };
+    render();
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+
+  function renderHome(){
+    return `
+      <div class="brand"><div class="brand-title">IMPOSTOR</div></div>
+      <p class="tagline">Um do grupo não conhece a resposta. Descubra quem é — sem ninguém precisar dividir o celular.</p>
+      <div class="home-hero">
+        <div class="masks">🎭</div>
+        <h2 style="font-size:20px;">Cultura pop, cada um no seu aparelho</h2>
+        <p>Crie uma sala, mande o código para a galera e cada jogador vê sua carta em segredo no próprio celular.</p>
+        <div class="cat-strip">
+          ${Object.entries(CATEGORY_META).map(([k,v])=>`<span class="cat-pill">${v.emoji} ${v.label}</span>`).join('')}
+        </div>
+      </div>
+      <div class="stack" style="margin-top:18px;">
+        <button class="btn btn-primary" id="go-create">Criar sala</button>
+        <button class="btn btn-ghost" id="go-join">Entrar em uma sala</button>
+      </div>
+      <div class="footer-note">Jogo social — a conversa e a votação acontecem ao vivo, entre vocês.</div>
+    `;
+  }
+
+  function renderCreate(){
+    const cats = Object.entries(CATEGORY_META);
+    return `
+      <button class="back-link" id="back-home">‹ Voltar</button>
+      <h2 style="font-size:24px;margin-bottom:18px;">Criar sala</h2>
+      <div class="stack">
+        <div>
+          <label class="field-label">Seu nome</label>
+          <input type="text" id="create-name" placeholder="Como te chamam?" value="${esc(state.createName)}">
+        </div>
+        <div>
+          <label class="field-label">Categorias da sala</label>
+          <div class="chip-grid">
+            ${cats.map(([k,v])=>`
+              <div class="chip ${state.createCats.has(k)?'active':''}" data-cat="${k}">
+                <span class="emoji">${v.emoji}</span>${v.label}
+              </div>`).join('')}
+          </div>
+        </div>
+        ${state.error ? `<div class="error-text">${esc(state.error)}</div>` : ''}
+        <button class="btn btn-primary" id="submit-create" ${state.busy?'disabled':''}>${state.busy?'Criando...':'Criar sala e convidar'}</button>
+      </div>
+    `;
+  }
+
+  function renderJoin(){
+    return `
+      <button class="back-link" id="back-home">‹ Voltar</button>
+      <h2 style="font-size:24px;margin-bottom:18px;">Entrar em uma sala</h2>
+      <div class="stack">
+        <div>
+          <label class="field-label">Código da sala</label>
+          <input type="text" id="join-code" placeholder="Ex: 7X4KQ" maxlength="8" style="text-transform:uppercase;letter-spacing:3px;" value="${esc(state.joinCode)}">
+        </div>
+        <div>
+          <label class="field-label">Seu nome</label>
+          <input type="text" id="join-name" placeholder="Como te chamam?" value="${esc(state.joinName)}">
+        </div>
+        ${state.error ? `<div class="error-text">${esc(state.error)}</div>` : ''}
+        <button class="btn btn-primary" id="submit-join" ${state.busy?'disabled':''}>${state.busy?'Entrando...':'Entrar na sala'}</button>
+      </div>
+    `;
+  }
+
+  function renderLobby(){
+    const room = state.room;
+    const players = room.players || [];
+    const catOptions = ['random', ...room.categories];
+    return `
+      <div class="brand">
+        <div class="brand-title" style="font-size:22px;">IMPOSTOR</div>
+        <button class="back-link" style="padding:0;" id="leave-room">Sair</button>
+      </div>
+      <div class="ticket">
+        <div class="lbl">CÓDIGO DA SALA</div>
+        <div class="code">${esc(room.code)}</div>
+      </div>
+      <div class="section-title">CATEGORIAS DA SALA</div>
+      <div class="cat-strip" style="justify-content:flex-start;">
+        ${room.categories.map(c=>`<span class="cat-pill">${CATEGORY_META[c].emoji} ${CATEGORY_META[c].label}</span>`).join('')}
+      </div>
+      <div class="section-title">JOGADORES (${players.length})</div>
+      <div class="player-list">
+        ${players.map(p=>`
+          <div class="player-row">
+            <span class="dot"></span>${esc(p.name)}
+            ${p.id===room.hostId?'<span class="host-tag">HOST</span>':''}
+          </div>`).join('')}
+      </div>
+      ${state.isHost ? `
+        <div class="section-title">RODADA</div>
+        <select id="round-cat">
+          ${catOptions.map(c=>`<option value="${c}" ${state.roundCatChoice===c?'selected':''}>${c==='random'?'🎲 Categoria aleatória':CATEGORY_META[c].emoji+' '+CATEGORY_META[c].label}</option>`).join('')}
+        </select>
+        ${state.error ? `<div class="error-text">${esc(state.error)}</div>` : ''}
+        <div style="margin-top:12px;">
+          <button class="btn btn-primary" id="start-round">Iniciar rodada</button>
+        </div>
+        <div class="hint">Mínimo de 3 jogadores. Todos veem a sala se atualizar sozinha.</div>
+      ` : `
+        <div class="waiting-box"><span class="pulse"></span>Aguardando o host iniciar a rodada...</div>
+      `}
+    `;
+  }
+
+  function renderReveal(){
+    const room = state.room;
+    const round = room.round;
+    if(!round){ return renderLobby(); }
+    const isImpostor = round.impostorId === state.playerId;
+    const meta = CATEGORY_META[round.category];
+    return `
+      <div class="brand">
+        <div class="brand-title" style="font-size:22px;">IMPOSTOR</div>
+        <div class="brand-code">${esc(room.code)}</div>
+      </div>
+      <div class="scene">
+        <div class="card3d ${state.revealed?'flipped':''}" id="flip-card">
+          <div class="face face-back">
+            <div class="icon">🎭</div>
+            <div class="tap-txt">Toque para ver sua carta</div>
+          </div>
+          <div class="face face-front ${isImpostor?'is-impostor':''}">
+            <div class="cat-tag">${meta.emoji} ${meta.label}</div>
+            ${isImpostor
+              ? `<div class="word-big">VOCÊ É O IMPOSTOR</div>
+                 <div class="flavor">Você não sabe a palavra secreta. Preste atenção nas dicas dos outros e tente se disfarçar!</div>`
+              : `<div class="word-big">${esc(round.word)}</div>
+                 <div class="flavor">Dê dicas sobre essa palavra sem dizer o nome. Um jogador não sabe qual é — descubram quem!</div>`
+            }
+          </div>
+        </div>
+      </div>
+      ${state.revealed ? `<button class="btn btn-ghost btn-sm" style="margin-top:14px;" id="hide-card">Ocultar carta</button>` : ''}
+      ${round.answerRevealed ? `
+        <div class="answer-banner">🏆 O impostor era <b>${esc(round.impostorName)}</b> — a palavra era <b>${esc(round.word)}</b>.</div>
+      ` : ''}
+      ${state.isHost ? `
+        <div class="host-controls">
+          ${!round.answerRevealed ? `<button class="btn btn-gold btn-sm" id="reveal-answer">Revelar impostor</button>` : ''}
+          <button class="btn btn-ghost btn-sm" id="new-round">Nova rodada</button>
+        </div>
+        <div class="hint">Discutam e votem ao vivo entre vocês. Quando decidirem, revele o impostor.</div>
+      ` : `<div class="hint">Converse com o grupo e tentem descobrir quem é o impostor.</div>`}
+    `;
+  }
+
+  function render(){
+    const app = document.getElementById('app');
+    let html = '';
+    if(state.screen==='home') html = renderHome();
+    else if(state.screen==='create') html = renderCreate();
+    else if(state.screen==='join') html = renderJoin();
+    else if(state.screen==='lobby' && state.room) html = renderLobby();
+    else if(state.screen==='reveal' && state.room) html = renderReveal();
+    else html = renderHome();
+    app.innerHTML = html;
+    bindEvents();
+  }
+
+  function bindEvents(){
+    const $ = id => document.getElementById(id);
+
+    if($('go-create')) $('go-create').onclick = () => { state.screen='create'; state.error=''; render(); };
+    if($('go-join')) $('go-join').onclick = () => { state.screen='join'; state.error=''; render(); };
+    if($('back-home')) $('back-home').onclick = () => { state.screen='home'; state.error=''; render(); };
+
+    if($('create-name')) $('create-name').oninput = e => { state.createName = e.target.value; };
+    document.querySelectorAll('.chip').forEach(el=>{
+      el.onclick = () => {
+        const cat = el.getAttribute('data-cat');
+        if(state.createCats.has(cat)) state.createCats.delete(cat);
+        else state.createCats.add(cat);
+        render();
+      };
+    });
+    if($('submit-create')) $('submit-create').onclick = handleCreateRoom;
+
+    if($('join-code')) $('join-code').oninput = e => { state.joinCode = e.target.value; };
+    if($('join-name')) $('join-name').oninput = e => { state.joinName = e.target.value; };
+    if($('submit-join')) $('submit-join').onclick = handleJoinRoom;
+
+    if($('leave-room')) $('leave-room').onclick = handleLeave;
+    if($('round-cat')) $('round-cat').onchange = e => { state.roundCatChoice = e.target.value; };
+    if($('start-round')) $('start-round').onclick = handleStartRound;
+
+    if($('flip-card')) $('flip-card').onclick = () => { state.revealed = !state.revealed; render(); };
+    if($('hide-card')) $('hide-card').onclick = () => { state.revealed = false; render(); };
+    if($('reveal-answer')) $('reveal-answer').onclick = handleRevealAnswer;
+    if($('new-round')) $('new-round').onclick = handleNewRound;
+  }
+
+  render();
+})();
+</script>
+</body>
+</html>
