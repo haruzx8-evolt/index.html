@@ -514,19 +514,43 @@
 
   async function startImpostorVote(){
     const room = await loadRoom(state.roomCode) || state.room;
-    if(!room || !room.round) return;
+    if(!room || !room.round || room.round.votingOpen) return;
     room.round.votingOpen = true;
     room.round.votes = {};
+    room.round.voteEndsAt = Date.now() + 60000;
+    room.round.voteResult = null;
     await saveRoom(room);
     state.room = room; render();
+    if(state.isHost) scheduleImpostorVoteEnd(room.round.roundId);
   }
   async function castImpostorVote(targetId){
     const room = await loadRoom(state.roomCode) || state.room;
-    if(!room || !room.round || !room.round.votingOpen) return;
+    if(!room || !room.round || !room.round.votingOpen || room.round.votes?.[state.playerId] !== undefined) return;
     room.round.votes = room.round.votes || {};
-    room.round.votes[state.playerId] = targetId;
+    room.round.votes[state.playerId] = targetId === 'skip' ? 'skip' : targetId;
     await saveRoom(room);
     state.room = room; render();
+  }
+  let impostorVoteTimer = null;
+  function scheduleImpostorVoteEnd(roundId){
+    if(impostorVoteTimer) clearTimeout(impostorVoteTimer);
+    impostorVoteTimer = setTimeout(async()=>{
+      const room = await loadRoom(state.roomCode) || state.room;
+      if(!room?.round || room.round.roundId !== roundId || !room.round.votingOpen) return;
+      const counts = {};
+      Object.values(room.round.votes||{}).forEach(v=>{ if(v !== 'skip') counts[v]=(counts[v]||0)+1; });
+      const skipCount = Object.values(room.round.votes||{}).filter(v=>v==='skip').length;
+      const maxVotes = Math.max(0,...Object.values(counts));
+      const leaders = Object.keys(counts).filter(id=>counts[id]===maxVotes && maxVotes>0);
+      room.round.votingOpen = false;
+      room.round.voteResult = (maxVotes > skipCount && leaders.length===1)
+        ? {type:'ejected', playerId:leaders[0], playerName:room.players.find(p=>p.id===leaders[0])?.name || 'Jogador'}
+        : {type:'skip', message: leaders.length>1 ? 'Empate! Ninguém foi expulso.' : 'Votação pulada. Ninguém foi expulso.'};
+      await saveRoom(room); state.room=room; render();
+    }, Math.max(0,(roomRoundDeadline(roomId))-Date.now()));
+  }
+  function roomRoundDeadline(roundId){
+    return state.room?.round?.roundId===roundId ? (state.room.round.voteEndsAt||Date.now()) : Date.now();
   }
   async function handleRevealAnswer(){
     const room = await loadRoom(state.roomCode) || state.room;
@@ -1091,19 +1115,22 @@
       ${round.answerRevealed ? `
         <div class="answer-banner">🏆 O impostor era <b>${esc(round.impostorName)}</b> — a palavra era <b>${esc(round.word)}</b>.</div>
       ` : ''}
+      ${round.voteResult ? `<div class="answer-banner">${round.voteResult.type==='ejected' ? `🚀 ${esc(round.voteResult.playerName)} foi expulso!` : `⏭️ ${esc(round.voteResult.message)}`}</div>` : ''}
       ${round.votingOpen ? `
-        <div class="section-title">VOTAÇÃO — QUEM É O IMPOSTOR?</div>
-        ${Object.values(round.votes||{}).length ? `<div class="hint">Votos registrados: ${Object.keys(round.votes||{}).length}/${room.players.length}</div>` : ''}
-        <div class="stack">${room.players.map(p=>`<button class="hs-pick-btn" data-impostor-vote="${p.id}" ${round.votes&&round.votes[state.playerId]?'disabled':''}>${esc(p.name)}${Object.values(round.votes||{}).filter(v=>v===p.id).length ? ` · ${Object.values(round.votes||{}).filter(v=>v===p.id).length} voto(s)` : ''}</button>`).join('')}</div>
-        ${round.votes&&round.votes[state.playerId] ? `<div class="hint">Seu voto foi registrado.</div>` : ''}
+        <div class="section-title">REUNIÃO — VOTAR PARA EXPULSAR</div>
+        <div class="hint" id="impostor-vote-countdown">Tempo restante: ${Math.max(0,Math.ceil(((round.voteEndsAt||Date.now())-Date.now())/1000))}s</div>
+        <div class="hint">Votos: ${Object.keys(round.votes||{}).length}/${room.players.length}</div>
+        <div class="stack">${room.players.map(p=>`<button class="hs-pick-btn" data-impostor-vote="${p.id}" ${(round.votes&&round.votes[state.playerId]!==undefined)?'disabled':''}>${esc(p.name)}${Object.values(round.votes||{}).filter(v=>v===p.id).length ? ` · ${Object.values(round.votes||{}).filter(v=>v===p.id).length} voto(s)` : ''}</button>`).join('')}
+          <button class="btn btn-ghost" data-impostor-vote="skip" ${(round.votes&&round.votes[state.playerId]!==undefined)?'disabled':''}>Pular votação</button></div>
+        ${round.votes&&round.votes[state.playerId]!==undefined ? `<div class="hint">Voto registrado.</div>` : ''}
       ` : ''}
       ${state.isHost ? `
         <div class="host-controls">
-          ${!round.votingOpen && !round.answerRevealed ? `<button class="btn btn-primary btn-sm" id="open-impostor-vote">Abrir votação</button>` : ''}
+          ${!round.votingOpen && !round.voteResult && !round.answerRevealed ? `<button class="btn btn-primary btn-sm" id="open-impostor-vote">Iniciar reunião (60s)</button>` : ''}
           ${!round.answerRevealed ? `<button class="btn btn-gold btn-sm" id="reveal-answer">Revelar impostor</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="new-round">Nova rodada</button>
         </div>
-        <div class="hint">Discutam e votem ao vivo entre vocês. Quando decidirem, revele o impostor.</div>
+        <div class="hint">Inicie a reunião: cada jogador pode votar em alguém ou pular. Ao fim de 60 segundos, o resultado é exibido.</div>
       ` : `<div class="hint">Converse com o grupo e tentem descobrir quem é o impostor.</div>`}
     `;
   }
@@ -1522,6 +1549,12 @@
     if($('hide-card')) $('hide-card').onclick = () => { state.revealed = false; render(); };
     if($('reveal-answer')) $('reveal-answer').onclick = handleRevealAnswer;
     if($('open-impostor-vote')) $('open-impostor-vote').onclick = startImpostorVote;
+    if(state.screen==='reveal' && state.room?.round?.votingOpen){
+      const roundId=state.room.round.roundId;
+      if(state.isHost && !impostorVoteTimer) scheduleImpostorVoteEnd(roundId);
+      const countdown=$('impostor-vote-countdown');
+      if(countdown){ if(window.impostorCountdown) clearInterval(window.impostorCountdown); window.impostorCountdown=setInterval(()=>{ const left=Math.max(0,Math.ceil(((state.room?.round?.voteEndsAt||Date.now())-Date.now())/1000)); const el=$('impostor-vote-countdown'); if(el) el.textContent='Tempo restante: '+left+'s'; if(left<=0) clearInterval(window.impostorCountdown); },250); }
+    }
     document.querySelectorAll('[data-impostor-vote]').forEach(el=>{ el.onclick = () => castImpostorVote(el.getAttribute('data-impostor-vote')); });
     if($('new-round')) $('new-round').onclick = handleNewRound;
 
