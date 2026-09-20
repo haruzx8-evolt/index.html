@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1, user-scalable=no">
-<title>Impostor — Cultura Pop</title>
+<title>Game Hub — Impostor & Hitler Secreto</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Anton&family=Sora:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
@@ -35,13 +35,19 @@
     justify-content:center;
     -webkit-tap-highlight-color:transparent;
   }
-  #app{
+  #app-outer{
     width:100%;
     max-width:460px;
     min-height:100vh;
     padding:22px 18px 40px;
     display:flex;
     flex-direction:column;
+  }
+  .theme-hs{
+    --pink:#c8172a;
+    --pink-deep:#7a0d17;
+    --gold:#e8b923;
+    --cyan:#c8172a;
   }
   h1,h2,h3{
     font-family:'Anton', sans-serif;
@@ -56,7 +62,7 @@
     margin-bottom:8px;
   }
   .brand-title{
-    font-size:30px;
+    font-size:26px;
     background:linear-gradient(90deg,var(--pink),var(--gold));
     -webkit-background-clip:text;
     background-clip:text;
@@ -75,15 +81,9 @@
     color:var(--muted);
     font-size:15px;
     line-height:1.5;
-    margin:2px 0 28px;
+    margin:2px 0 24px;
   }
   .stack{ display:flex; flex-direction:column; gap:14px; }
-  .card-panel{
-    background:var(--surface);
-    border:1px solid var(--line);
-    border-radius:var(--radius);
-    padding:20px;
-  }
   label.field-label{
     display:block;
     font-size:13px;
@@ -124,74 +124,32 @@
     color:#fff;
     box-shadow:0 10px 24px -10px rgba(255,77,121,0.6);
   }
-  .btn-primary:disabled{
-    opacity:0.4;
-    box-shadow:none;
-    cursor:not-allowed;
-  }
-  .btn-ghost{
-    background:transparent;
-    color:var(--text);
-    border:1.5px solid var(--line);
-  }
-  .btn-gold{
-    background:linear-gradient(90deg,var(--gold),#ff9d3f);
-    color:#231402;
-  }
+  .btn-primary:disabled{ opacity:0.4; box-shadow:none; cursor:not-allowed; }
+  .btn-ghost{ background:transparent; color:var(--text); border:1.5px solid var(--line); }
+  .btn-gold{ background:linear-gradient(90deg,var(--gold),#ff9d3f); color:#231402; }
   .btn-sm{ padding:11px 14px; font-size:13.5px; border-radius:11px; }
+  .btn-block-2{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .home-hero{
-    margin-top:6px;
-    padding:26px 20px;
-    border-radius:20px;
-    background:var(--surface);
-    border:1px solid var(--line);
-    text-align:center;
+    margin-top:6px; padding:26px 20px; border-radius:20px;
+    background:var(--surface); border:1px solid var(--line); text-align:center;
   }
   .home-hero .masks{ font-size:44px; margin-bottom:8px; }
   .home-hero p{ color:var(--muted); font-size:14.5px; line-height:1.55; margin:8px 0 0; }
-  .cat-strip{
-    display:flex;
-    gap:8px;
-    justify-content:center;
-    margin-top:16px;
-    flex-wrap:wrap;
-  }
+  .cat-strip{ display:flex; gap:8px; justify-content:center; margin-top:16px; flex-wrap:wrap; }
   .cat-pill{
-    font-size:12.5px;
-    font-weight:700;
-    padding:6px 12px;
-    border-radius:999px;
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    color:var(--muted);
+    font-size:12.5px; font-weight:700; padding:6px 12px; border-radius:999px;
+    background:var(--surface-2); border:1px solid var(--line); color:var(--muted);
   }
   .back-link{
-    background:none;
-    border:none;
-    color:var(--muted);
-    font-family:'Sora',sans-serif;
-    font-weight:600;
-    font-size:14px;
-    padding:6px 0 18px;
-    cursor:pointer;
-    text-align:left;
-    width:fit-content;
+    background:none; border:none; color:var(--muted); font-family:'Sora',sans-serif;
+    font-weight:600; font-size:14px; padding:6px 0 18px; cursor:pointer;
+    text-align:left; width:fit-content;
   }
-  .chip-grid{
-    display:grid;
-    grid-template-columns:1fr 1fr;
-    gap:10px;
-  }
+  .chip-grid{ display:grid; grid-template-columns:1fr 1fr; gap:10px; }
   .chip{
-    border:1.5px solid var(--line);
-    background:var(--surface-2);
-    border-radius:14px;
-    padding:14px 10px;
-    text-align:center;
-    cursor:pointer;
-    font-weight:700;
-    font-size:14px;
-    color:var(--muted);
+    border:1.5px solid var(--line); background:var(--surface-2); border-radius:14px;
+    padding:14px 10px; text-align:center; cursor:pointer; font-weight:700;
+    font-size:14px; color:var(--muted);
   }
   .chip .emoji{ display:block; font-size:22px; margin-bottom:6px; }
   .chip.active{
@@ -199,135 +157,60 @@
     background:linear-gradient(160deg, rgba(255,77,121,0.18), rgba(255,201,63,0.10));
     color:var(--text);
   }
-  .error-text{
-    color:#ff8a8a;
-    font-size:13.5px;
-    font-weight:600;
-    margin-top:2px;
-  }
+  .error-text{ color:#ff8a8a; font-size:13.5px; font-weight:600; margin-top:2px; }
   .ticket{
-    position:relative;
-    background:linear-gradient(135deg,var(--surface-2),var(--surface));
-    border:1.5px dashed rgba(255,255,255,0.25);
-    border-radius:16px;
-    padding:22px 18px;
-    text-align:center;
-    overflow:hidden;
+    position:relative; background:linear-gradient(135deg,var(--surface-2),var(--surface));
+    border:1.5px dashed rgba(255,255,255,0.25); border-radius:16px;
+    padding:22px 18px; text-align:center; overflow:hidden;
   }
   .ticket::before, .ticket::after{
-    content:"";
-    position:absolute;
-    width:22px; height:22px;
-    background:var(--bg);
-    border-radius:50%;
-    top:50%; transform:translateY(-50%);
+    content:""; position:absolute; width:22px; height:22px; background:var(--bg);
+    border-radius:50%; top:50%; transform:translateY(-50%);
   }
   .ticket::before{ left:-11px; }
   .ticket::after{ right:-11px; }
-  .ticket .lbl{
-    font-size:12px;
-    letter-spacing:1px;
-    color:var(--muted);
-    font-weight:700;
-    margin-bottom:6px;
-  }
+  .ticket .lbl{ font-size:12px; letter-spacing:1px; color:var(--muted); font-weight:700; margin-bottom:6px; }
   .ticket .code{
-    font-family:'Anton',sans-serif;
-    font-size:42px;
-    letter-spacing:6px;
+    font-family:'Anton',sans-serif; font-size:42px; letter-spacing:6px;
     background:linear-gradient(90deg,var(--gold),var(--pink));
     -webkit-background-clip:text; background-clip:text; color:transparent;
   }
-  .section-title{
-    font-size:13px;
-    font-weight:700;
-    color:var(--muted);
-    margin:22px 0 10px 2px;
-  }
+  .section-title{ font-size:13px; font-weight:700; color:var(--muted); margin:22px 0 10px 2px; }
   .player-list{ display:flex; flex-direction:column; gap:8px; }
   .player-row{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    border-radius:12px;
-    padding:10px 14px;
-    font-weight:600;
-    font-size:14.5px;
+    display:flex; align-items:center; gap:10px; background:var(--surface-2);
+    border:1px solid var(--line); border-radius:12px; padding:10px 14px;
+    font-weight:600; font-size:14.5px;
   }
-  .player-row .dot{
-    width:8px; height:8px; border-radius:50%;
-    background:var(--cyan);
-    flex-shrink:0;
-  }
-  .player-row .host-tag{
-    margin-left:auto;
-    font-size:11px;
-    color:var(--gold);
-    font-weight:800;
-    letter-spacing:0.5px;
+  .player-row .dot{ width:8px; height:8px; border-radius:50%; background:var(--cyan); flex-shrink:0; }
+  .player-row.dead{ opacity:0.4; text-decoration:line-through; }
+  .player-row .host-tag{ margin-left:auto; font-size:11px; color:var(--gold); font-weight:800; letter-spacing:0.5px; }
+  .player-row .role-tag{
+    margin-left:auto; font-size:10.5px; font-weight:800; letter-spacing:0.4px;
+    padding:3px 8px; border-radius:999px; background:var(--surface); color:var(--muted);
   }
   select{
-    width:100%;
-    background:var(--surface-2);
-    border:1px solid var(--line);
-    color:var(--text);
-    font-family:'Sora',sans-serif;
-    font-weight:600;
-    font-size:15px;
-    padding:13px 14px;
-    border-radius:12px;
-    outline:none;
+    width:100%; background:var(--surface-2); border:1px solid var(--line); color:var(--text);
+    font-family:'Sora',sans-serif; font-weight:600; font-size:15px; padding:13px 14px;
+    border-radius:12px; outline:none;
   }
-  .hint{
-    color:var(--muted);
-    font-size:13px;
-    text-align:center;
-    margin-top:10px;
-    line-height:1.5;
-  }
+  .hint{ color:var(--muted); font-size:13px; text-align:center; margin-top:10px; line-height:1.5; }
   .pulse{
-    display:inline-block;
-    width:9px; height:9px;
-    border-radius:50%;
-    background:var(--pink);
-    margin-right:7px;
-    animation:pulse 1.4s infinite ease-in-out;
-    vertical-align:middle;
+    display:inline-block; width:9px; height:9px; border-radius:50%; background:var(--pink);
+    margin-right:7px; animation:pulse 1.4s infinite ease-in-out; vertical-align:middle;
   }
-  @keyframes pulse{
-    0%,100%{ opacity:1; transform:scale(1); }
-    50%{ opacity:0.35; transform:scale(0.7); }
-  }
-  .waiting-box{
-    text-align:center;
-    padding:34px 16px;
-    color:var(--muted);
-    font-weight:600;
-    font-size:14.5px;
-  }
+  @keyframes pulse{ 0%,100%{ opacity:1; transform:scale(1); } 50%{ opacity:0.35; transform:scale(0.7); } }
+  .waiting-box{ text-align:center; padding:34px 16px; color:var(--muted); font-weight:600; font-size:14.5px; }
   .scene{ perspective:1400px; margin-top:6px; }
   .card3d{
-    position:relative;
-    width:100%;
-    aspect-ratio:3/4;
-    transform-style:preserve-3d;
-    transition:transform 0.65s cubic-bezier(.2,.8,.2,1);
-    cursor:pointer;
+    position:relative; width:100%; aspect-ratio:3/4; transform-style:preserve-3d;
+    transition:transform 0.65s cubic-bezier(.2,.8,.2,1); cursor:pointer;
   }
   .card3d.flipped{ transform:rotateY(180deg); }
   .face{
-    position:absolute; inset:0;
-    backface-visibility:hidden;
-    border-radius:22px;
-    display:flex;
-    flex-direction:column;
-    align-items:center;
-    justify-content:center;
-    padding:26px;
-    text-align:center;
-    border:1.5px solid var(--line);
+    position:absolute; inset:0; backface-visibility:hidden; border-radius:22px;
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    padding:26px; text-align:center; border:1.5px solid var(--line);
   }
   .face-back{
     background:
@@ -336,77 +219,188 @@
   }
   .face-back .icon{ font-size:52px; margin-bottom:14px; }
   .face-back .tap-txt{ font-weight:700; color:var(--muted); font-size:14.5px; }
-  .face-front{
-    transform:rotateY(180deg);
-    background:linear-gradient(160deg,var(--surface-2),var(--surface));
-  }
-  .face-front.is-impostor{
-    background:linear-gradient(160deg,#5a1030,#2a0a1e);
-    border-color:rgba(255,201,63,0.4);
-  }
-  .face-front .cat-tag{
-    font-size:13px;
-    font-weight:800;
-    letter-spacing:0.5px;
-    color:var(--muted);
-    margin-bottom:14px;
-  }
+  .face-front{ transform:rotateY(180deg); background:linear-gradient(160deg,var(--surface-2),var(--surface)); }
+  .face-front.is-impostor{ background:linear-gradient(160deg,#5a1030,#2a0a1e); border-color:rgba(255,201,63,0.4); }
+  .face-front .cat-tag{ font-size:13px; font-weight:800; letter-spacing:0.5px; color:var(--muted); margin-bottom:14px; }
   .face-front.is-impostor .cat-tag{ color:#ffb9cf; }
-  .face-front .word-big{
-    font-family:'Anton',sans-serif;
-    font-size:34px;
-    line-height:1.15;
-    color:var(--text);
-  }
+  .face-front .word-big{ font-family:'Anton',sans-serif; font-size:34px; line-height:1.15; color:var(--text); }
   .face-front.is-impostor .word-big{
     background:linear-gradient(90deg,var(--gold),var(--pink));
-    -webkit-background-clip:text; background-clip:text; color:transparent;
-    font-size:30px;
+    -webkit-background-clip:text; background-clip:text; color:transparent; font-size:30px;
   }
-  .face-front .flavor{
-    margin-top:16px;
-    font-size:13.5px;
-    color:var(--muted);
-    line-height:1.5;
-  }
+  .face-front .flavor{ margin-top:16px; font-size:13.5px; color:var(--muted); line-height:1.5; }
   .answer-banner{
-    margin-top:16px;
-    background:var(--surface);
-    border:1px solid rgba(255,201,63,0.35);
-    border-radius:14px;
-    padding:14px 16px;
-    text-align:center;
-    font-size:14px;
-    font-weight:600;
-    line-height:1.5;
+    margin-top:16px; background:var(--surface); border:1px solid rgba(255,201,63,0.35);
+    border-radius:14px; padding:14px 16px; text-align:center; font-size:14px; font-weight:600; line-height:1.5;
   }
   .answer-banner b{ color:var(--gold); }
-  .host-controls{
-    margin-top:18px;
-    display:flex;
-    gap:10px;
+  .host-controls{ margin-top:18px; display:flex; gap:10px; }
+  .footer-note{ margin-top:auto; padding-top:26px; color:#544d78; font-size:11.5px; text-align:center; }
+  .setup-box{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:20px; font-size:14px; line-height:1.7; color:var(--muted);
   }
-  .footer-note{
-    margin-top:auto;
-    padding-top:26px;
-    color:#544d78;
-    font-size:11.5px;
-    text-align:center;
+  .setup-box h2{ font-size:20px; color:var(--text); margin-bottom:6px; }
+  .setup-box ol{ padding-left:20px; margin:14px 0; }
+  .setup-box li{ margin-bottom:10px; }
+  .setup-box code{ background:var(--surface-2); padding:2px 7px; border-radius:6px; font-size:12.5px; color:var(--gold); }
+  .setup-box pre{
+    background:var(--surface-2); border:1px solid var(--line); border-radius:10px;
+    padding:12px 14px; font-size:12px; overflow-x:auto; color:#cfc9ea; margin:10px 0;
   }
+
+  /* ---- Hub ---- */
+  .game-card{
+    position:relative; border-radius:20px; padding:24px 20px; border:1px solid var(--line);
+    cursor:pointer; overflow:hidden; text-align:left;
+  }
+  .game-card .gc-emoji{ font-size:34px; margin-bottom:10px; display:block; }
+  .game-card .gc-title{ font-family:'Anton',sans-serif; font-size:22px; margin-bottom:6px; }
+  .game-card .gc-desc{ color:var(--muted); font-size:13.5px; line-height:1.5; }
+  .game-card.gc-impostor{ background:linear-gradient(160deg, rgba(255,77,121,0.14), var(--surface)); }
+  .game-card.gc-hitler{ background:linear-gradient(160deg, rgba(200,23,42,0.20), var(--surface)); }
+  .game-card .gc-players{
+    margin-top:12px; font-size:11.5px; font-weight:800; letter-spacing:0.4px; color:var(--gold);
+  }
+
+  /* ---- Hitler Secreto board ---- */
+  .hs-tracks{ display:flex; flex-direction:column; gap:14px; margin-top:14px; }
+  .hs-track-row{ display:flex; align-items:center; gap:8px; }
+  .hs-track-label{ width:58px; font-size:11.5px; font-weight:800; color:var(--muted); flex-shrink:0; }
+  .hs-track{ display:flex; gap:6px; flex:1; }
+  .hs-slot{
+    position:relative; flex:1; aspect-ratio:3/4; border-radius:8px; border:2px solid var(--line);
+    display:flex; align-items:center; justify-content:center; background:var(--surface-2);
+  }
+  .hs-slot.filled-lib{ background:linear-gradient(160deg,#3f7dc9,#1d4a80); border-color:#3f7dc9; }
+  .hs-slot.filled-fas{ background:linear-gradient(160deg,#d3283c,#7a0d17); border-color:#d3283c; }
+  .hs-slot .pwr-icon{ position:absolute; bottom:-18px; font-size:13px; }
+  .hs-tracker{ display:flex; gap:8px; align-items:center; margin-top:4px; }
+  .hs-tracker .td{ width:14px; height:14px; border-radius:50%; border:2px solid var(--line); }
+  .hs-tracker .td.on{ background:var(--gold); border-color:var(--gold); }
+  .hs-roster{ display:flex; flex-direction:column; gap:8px; margin-top:8px; }
+  .hs-log{
+    margin-top:8px; max-height:150px; overflow-y:auto; display:flex; flex-direction:column;
+    gap:7px; font-size:12.5px; color:var(--muted); padding-right:2px;
+  }
+  .hs-log div{ border-left:2px solid var(--line); padding-left:9px; line-height:1.4; }
+  .hs-role-panel{
+    background:var(--surface); border:1px solid var(--line); border-radius:16px;
+    padding:16px 18px; margin-bottom:16px; cursor:pointer;
+  }
+  .hs-role-panel .hs-role-head{ display:flex; align-items:center; justify-content:space-between; font-weight:700; font-size:14px; color:var(--muted); }
+  .hs-role-body{ margin-top:12px; }
+  .hs-role-big{ font-family:'Anton',sans-serif; font-size:26px; }
+  .hs-role-big.liberal{ color:#5fa7ec; }
+  .hs-role-big.fascist{ color:#ff5a6c; }
+  .hs-role-big.hitler{ color:var(--gold); }
+  .hs-team-list{ margin-top:8px; font-size:13px; color:var(--muted); line-height:1.6; }
+  .hs-card-choice{ display:flex; gap:10px; margin-top:14px; }
+  .hs-policy-card{
+    flex:1; border-radius:16px; padding:30px 8px; text-align:center; font-weight:800;
+    cursor:pointer; border:2px solid var(--line); font-family:'Anton',sans-serif; font-size:15px; color:#fff;
+  }
+  .hs-policy-card.liberal{ background:linear-gradient(160deg,#3f7dc9,#173a63); }
+  .hs-policy-card.fascist{ background:linear-gradient(160deg,#d3283c,#5c0910); }
+  .hs-pick-btn{
+    width:100%; text-align:left; background:var(--surface-2); border:1.5px solid var(--line);
+    border-radius:12px; padding:13px 16px; font-weight:700; color:var(--text); font-size:14.5px;
+    cursor:pointer; margin-bottom:8px;
+  }
+  .hs-pick-btn:active{ border-color:var(--pink); }
+  .hs-gameover-banner{
+    text-align:center; padding:28px 18px; border-radius:18px; margin-top:6px;
+  }
+  .hs-gameover-banner.win-liberal{ background:linear-gradient(160deg,#2c5a94,#132c4d); }
+  .hs-gameover-banner.win-fascist{ background:linear-gradient(160deg,#8f1424,#3d0710); }
+  .hs-gameover-banner .gg-title{ font-family:'Anton',sans-serif; font-size:26px; margin-bottom:8px; }
+  .hs-gameover-banner p{ color:#e9e4ff; font-size:14px; line-height:1.5; }
 </style>
 </head>
 <body>
-<div id="app"></div>
+<div id="app-outer"><div id="app"></div></div>
+
+<!-- Firebase (backend real, funciona hospedado fora do Claude, ex: GitHub Pages) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.0/firebase-database-compat.js"></script>
 
 <script>
 (function(){
+  // ======================================================================
+  // CONFIGURAÇÃO DO FIREBASE — troque pelos dados do SEU projeto se clonar.
+  // ======================================================================
+  const firebaseConfig = {
+    apiKey: "AIzaSyCou0PqMBbNZ5RKJOWroPvcYsgL6AhUTdQ",
+    authDomain: "jogos-do-henry.firebaseapp.com",
+    databaseURL: "https://jogos-do-henry-default-rtdb.firebaseio.com",
+    projectId: "jogos-do-henry",
+    storageBucket: "jogos-do-henry.firebasestorage.app",
+    messagingSenderId: "917175368425",
+    appId: "1:917175368425:web:807c3b9164f77199ad4e78",
+    measurementId: "G-PBCYM5TLHZ"
+  };
+
+  const NEEDS_SETUP = !firebaseConfig.apiKey || firebaseConfig.apiKey === 'SUA_API_KEY_AQUI';
+  let db = null;
+  if(!NEEDS_SETUP){
+    firebase.initializeApp(firebaseConfig);
+    db = firebase.database();
+  }
+
+  function esc(s){
+    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  }
+  function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
+  function shuffle(arr){
+    const a = arr.slice();
+    for(let i=a.length-1;i>0;i--){
+      const j = Math.floor(Math.random()*(i+1));
+      [a[i],a[j]]=[a[j],a[i]];
+    }
+    return a;
+  }
+  function generateCode(){
+    const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    let c=''; for(let i=0;i<5;i++) c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];
+    return c;
+  }
+  function generateId(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function withTimeout(promise, ms){
+    return Promise.race([
+      promise,
+      new Promise((_, reject) => setTimeout(() => reject(new Error('timeout')), ms))
+    ]);
+  }
+
+  // ======================================================================
+  // ESTADO GLOBAL
+  // ======================================================================
+  let state = {
+    screen:'hub', // hub | home,create,join,lobby,reveal (Impostor) | hs-home,hs-create,hs-join,hs-lobby,hs-game (Hitler Secreto)
+    error:'',
+    busy:false,
+
+    // Impostor
+    playerId:null, playerName:'', roomCode:null, isHost:false, room:null,
+    revealed:false, lastRoundId:null,
+    createCats: new Set(['animes','series','filmes','jogos']),
+    roundCatChoice:'random', joinName:'', joinCode:'', createName:'',
+
+    // Hitler Secreto
+    hsPlayerId:null, hsPlayerName:'', hsRoomCode:null, hsIsHost:false, hsRoom:null,
+    hsCreateName:'', hsJoinName:'', hsJoinCode:'',
+    hsRoleOpen:false, hsResolving:false
+  };
+
+  // ======================================================================
+  // IMPOSTOR — dados e regras
+  // ======================================================================
   const CATEGORY_META = {
     animes: { label:'Animes', emoji:'⛩️' },
     series: { label:'Séries', emoji:'📺' },
     filmes: { label:'Filmes', emoji:'🎬' },
     jogos:  { label:'Jogos',  emoji:'🎮' }
   };
-
   const WORD_BANKS = {
     animes: ['Naruto','One Piece','Attack on Titan','Death Note','Dragon Ball Z','Demon Slayer','My Hero Academia','Fullmetal Alchemist','Jujutsu Kaisen','Sailor Moon','Cowboy Bebop','Evangelion','Bleach','Hunter x Hunter','Tokyo Ghoul','One Punch Man','Spy x Family','Chainsaw Man','Sword Art Online','Fairy Tail','Code Geass','Vinland Saga','Dr. Stone','Haikyuu!!'],
     series: ['Stranger Things','Breaking Bad','Game of Thrones','Friends','The Office','La Casa de Papel','Round 6','Wednesday','The Crown','Peaky Blinders','The Witcher','Dark','Chernobyl','The Boys','Sherlock','Grey\'s Anatomy','How I Met Your Mother','Better Call Saul','Bridgerton','The Mandalorian','Ted Lasso','Euphoria','Black Mirror','The Walking Dead'],
@@ -414,68 +408,34 @@
     jogos:  ['Minecraft','Fortnite','GTA V','The Legend of Zelda','FIFA','League of Legends','Among Us','Free Fire','Roblox','Valorant','Counter-Strike','Call of Duty','The Last of Us','God of War','Red Dead Redemption','Mario Kart','Pokémon','Super Mario Bros','Cyberpunk 2077','Elden Ring','Animal Crossing','Street Fighter','Genshin Impact','Stardew Valley']
   };
 
-  const CODE_CHARS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
-  function generateCode(){
-    let c=''; for(let i=0;i<5;i++) c+=CODE_CHARS[Math.floor(Math.random()*CODE_CHARS.length)];
-    return c;
+  let roomRef = null;
+  function startListening(){
+    stopListening();
+    roomRef = db.ref('rooms/'+state.roomCode);
+    roomRef.on('value', snap => {
+      const room = snap.val();
+      if(!room) return;
+      state.room = room;
+      if(room.status==='playing' && room.round && room.round.roundId !== state.lastRoundId){
+        state.lastRoundId = room.round.roundId;
+        state.revealed = false;
+        state.screen = 'reveal';
+      } else if(room.status==='lobby' && state.screen==='reveal'){
+        state.screen = 'lobby';
+        state.lastRoundId = null;
+      }
+      if(state.screen==='lobby' || state.screen==='reveal') render();
+    });
   }
-  function generateId(){ return Math.random().toString(36).slice(2,10)+Date.now().toString(36).slice(-4); }
+  function stopListening(){ if(roomRef){ roomRef.off(); roomRef=null; } }
 
-  let state = {
-    screen:'home',
-    playerId:null,
-    playerName:'',
-    roomCode:null,
-    isHost:false,
-    room:null,
-    revealed:false,
-    lastRoundId:null,
-    error:'',
-    createCats: new Set(['animes','series','filmes','jogos']),
-    roundCatChoice:'random',
-    joinName:'',
-    joinCode:'',
-    createName:'',
-    busy:false
-  };
-
-  let pollTimer = null;
-  function startPolling(){
-    stopPolling();
-    pollTimer = setInterval(pollRoom, 2200);
-  }
-  function stopPolling(){
-    if(pollTimer){ clearInterval(pollTimer); pollTimer=null; }
-  }
-
-  async function saveRoom(room){
-    await window.storage.set('room:'+room.code, JSON.stringify(room), true);
-  }
+  async function saveRoom(room){ await withTimeout(db.ref('rooms/'+room.code).set(room), 8000); }
   async function loadRoom(code){
     try{
-      const res = await window.storage.get('room:'+code, true);
-      if(!res || !res.value) return null;
-      return JSON.parse(res.value);
+      const snap = await withTimeout(db.ref('rooms/'+code).once('value'), 8000);
+      return snap.val() || null;
     }catch(e){ return null; }
   }
-
-  async function pollRoom(){
-    if(!state.roomCode) return;
-    const room = await loadRoom(state.roomCode);
-    if(!room) return;
-    state.room = room;
-    if(room.status==='playing' && room.round && room.round.roundId !== state.lastRoundId){
-      state.lastRoundId = room.round.roundId;
-      state.revealed = false;
-      state.screen = 'reveal';
-    } else if(room.status==='lobby' && state.screen==='reveal'){
-      state.screen = 'lobby';
-      state.lastRoundId = null;
-    }
-    if(state.screen==='lobby' || state.screen==='reveal') render();
-  }
-
-  function pickRandom(arr){ return arr[Math.floor(Math.random()*arr.length)]; }
 
   async function handleCreateRoom(){
     const name = state.createName.trim();
@@ -485,27 +445,19 @@
     const playerId = generateId();
     const code = generateCode();
     const room = {
-      code,
-      hostId: playerId,
-      categories: Array.from(state.createCats),
-      players: [{ id: playerId, name }],
-      status: 'lobby',
-      round: null,
-      usedWords: [],
-      createdAt: Date.now()
+      code, hostId: playerId, categories: Array.from(state.createCats),
+      players: [{ id: playerId, name }], status: 'lobby', round: null, usedWords: [], createdAt: Date.now()
     };
     state.busy = true; render();
-    await saveRoom(room);
-    state.playerId = playerId;
-    state.playerName = name;
-    state.roomCode = code;
-    state.isHost = true;
-    state.room = room;
-    state.screen = 'lobby';
-    state.lastRoundId = null;
-    state.busy = false;
-    render();
-    startPolling();
+    try{
+      await saveRoom(room);
+      state.playerId = playerId; state.playerName = name; state.roomCode = code;
+      state.isHost = true; state.room = room; state.screen = 'lobby'; state.lastRoundId = null;
+      state.busy = false; render(); startListening();
+    }catch(e){
+      state.error = 'Não deu pra criar a sala agora. Verifique a conexão e tente de novo.';
+      state.busy = false; render();
+    }
   }
 
   async function handleJoinRoom(){
@@ -515,59 +467,33 @@
     if(!code){ state.error='Digite o código da sala.'; render(); return; }
     state.busy = true; render();
     const room = await loadRoom(code);
-    if(!room){
-      state.error='Sala não encontrada. Confira o código.';
-      state.busy = false;
-      render();
-      return;
-    }
+    if(!room){ state.error='Sala não encontrada. Confira o código.'; state.busy = false; render(); return; }
     const playerId = generateId();
     room.players.push({ id: playerId, name });
-    await saveRoom(room);
+    try{ await saveRoom(room); }
+    catch(e){ state.error='Não deu pra entrar agora. Verifique a conexão e tente de novo.'; state.busy=false; render(); return; }
     state.error='';
-    state.playerId = playerId;
-    state.playerName = name;
-    state.roomCode = code;
-    state.isHost = false;
-    state.room = room;
-    state.screen = room.status==='playing' ? 'lobby' : 'lobby';
-    state.lastRoundId = room.status==='playing' ? null : null;
-    state.busy = false;
-    render();
-    startPolling();
+    state.playerId = playerId; state.playerName = name; state.roomCode = code;
+    state.isHost = false; state.room = room; state.screen = 'lobby'; state.lastRoundId = null;
+    state.busy = false; render(); startListening();
   }
 
   async function handleStartRound(){
     if(!state.room) return;
     const room = await loadRoom(state.roomCode) || state.room;
-    if(room.players.length < 3){
-      state.error='Mínimo de 3 jogadores para começar.';
-      render();
-      return;
-    }
-    const cat = state.roundCatChoice==='random'
-      ? pickRandom(room.categories)
-      : state.roundCatChoice;
+    if(room.players.length < 3){ state.error='Mínimo de 3 jogadores para começar.'; render(); return; }
+    const cat = state.roundCatChoice==='random' ? pickRandom(room.categories) : state.roundCatChoice;
     let pool = WORD_BANKS[cat].filter(w => !(room.usedWords||[]).includes(w));
     if(pool.length===0) pool = WORD_BANKS[cat];
     const word = pickRandom(pool);
     const impostor = pickRandom(room.players);
     room.status = 'playing';
-    room.round = {
-      category: cat,
-      word,
-      impostorId: impostor.id,
-      impostorName: impostor.name,
-      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6),
-      answerRevealed:false
-    };
+    room.round = { category: cat, word, impostorId: impostor.id, impostorName: impostor.name,
+      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6), answerRevealed:false };
     room.usedWords = [...(room.usedWords||[]), word].slice(-12);
     state.error='';
     await saveRoom(room);
-    state.room = room;
-    state.lastRoundId = room.round.roundId;
-    state.revealed = false;
-    state.screen = 'reveal';
+    state.room = room; state.lastRoundId = room.round.roundId; state.revealed = false; state.screen = 'reveal';
     render();
   }
 
@@ -579,58 +505,442 @@
     const word = pickRandom(pool);
     const impostor = pickRandom(room.players);
     room.status = 'playing';
-    room.round = {
-      category: cat,
-      word,
-      impostorId: impostor.id,
-      impostorName: impostor.name,
-      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6),
-      answerRevealed:false
-    };
+    room.round = { category: cat, word, impostorId: impostor.id, impostorName: impostor.name,
+      roundId: Date.now()+'-'+Math.random().toString(36).slice(2,6), answerRevealed:false };
     room.usedWords = [...(room.usedWords||[]), word].slice(-12);
     await saveRoom(room);
-    state.room = room;
-    state.lastRoundId = room.round.roundId;
-    state.revealed = false;
-    render();
+    state.room = room; state.lastRoundId = room.round.roundId; state.revealed = false; render();
   }
 
   async function handleRevealAnswer(){
     const room = await loadRoom(state.roomCode) || state.room;
     if(room.round) room.round.answerRevealed = true;
     await saveRoom(room);
-    state.room = room;
+    state.room = room; render();
+  }
+
+  function handleLeaveImpostor(){
+    stopListening();
+    state.screen='hub'; state.error=''; state.playerId=null; state.playerName='';
+    state.roomCode=null; state.isHost=false; state.room=null; state.revealed=false; state.lastRoundId=null;
+    state.createCats=new Set(['animes','series','filmes','jogos']);
+    state.roundCatChoice='random'; state.joinName=''; state.joinCode=''; state.createName='';
     render();
   }
 
-  async function handleBackToLobby(){
-    const room = await loadRoom(state.roomCode) || state.room;
-    room.status = 'lobby';
-    room.round = null;
-    await saveRoom(room);
-    state.room = room;
-    state.lastRoundId = null;
-    state.screen = 'lobby';
-    render();
+  // ======================================================================
+  // HITLER SECRETO — dados e regras
+  // ======================================================================
+  const HS_ROLE_TABLE = { 5:[3,1], 6:[4,1], 7:[4,2], 8:[5,2], 9:[5,3], 10:[6,3] };
+
+  function hsPowerFor(n, count){
+    if(n<=6){ if(count===3) return 'peek'; if(count===4||count===5) return 'execution'; return null; }
+    if(n<=8){ if(count===2) return 'investigate'; if(count===3) return 'special_election'; if(count===4||count===5) return 'execution'; return null; }
+    if(count===1||count===2) return 'investigate';
+    if(count===3) return 'special_election';
+    if(count===4||count===5) return 'execution';
+    return null;
+  }
+  function hsPowerLabel(p){
+    return { investigate:'🔍 Investigar', special_election:'🗳️ Eleição especial', execution:'💀 Execução', peek:'👁️ Espiar baralho' }[p] || '';
+  }
+  function hsBuildDeck(){
+    const d = [];
+    for(let i=0;i<6;i++) d.push('liberal');
+    for(let i=0;i<11;i++) d.push('fascist');
+    return shuffle(d);
+  }
+  function hsAssignRoles(ids){
+    const n = ids.length;
+    const [libCount, fasCount] = HS_ROLE_TABLE[n];
+    const order = shuffle(ids);
+    const roles = {};
+    let idx=0;
+    for(let i=0;i<libCount;i++) roles[order[idx++]]='liberal';
+    for(let i=0;i<fasCount;i++) roles[order[idx++]]='fascist';
+    roles[order[idx++]]='hitler';
+    return roles;
+  }
+  function hsNextAliveIndex(order, fromIndex, playersMap){
+    const n = order.length;
+    for(let step=1; step<=n; step++){
+      const idx=(fromIndex+step)%n;
+      const pid=order[idx];
+      if(playersMap[pid] && playersMap[pid].alive) return idx;
+    }
+    return fromIndex;
+  }
+  function hsAdvancePresident(g, playersMap){
+    let fromIdx = g.presidentIndex;
+    if(g.specialElectionActive){
+      fromIdx = g.specialElectionReturnIndex;
+      g.specialElectionActive=false;
+      g.specialElectionReturnIndex=null;
+    }
+    const nextIdx = hsNextAliveIndex(g.order, fromIdx, playersMap);
+    g.presidentIndex = nextIdx;
+    g.presidentId = g.order[nextIdx];
+  }
+  function hsEligibleChancellors(g, playersMap){
+    const aliveIds = Object.keys(playersMap).filter(id=>playersMap[id].alive);
+    const aliveCount = aliveIds.length;
+    return aliveIds.filter(id=>{
+      if(id===g.presidentId) return false;
+      if(id===g.lastChancellorId) return false;
+      if(aliveCount>5 && id===g.lastPresidentId) return false;
+      return true;
+    });
+  }
+  function hsEnsureDeck(g, need){
+    if(g.deck.length < need){
+      g.deck = shuffle([...g.deck, ...g.discard]);
+      g.discard = [];
+    }
+  }
+  function hsCheckPolicyWin(g){
+    if(g.liberalPolicies>=5) return {winner:'liberal', reason:'5 políticas Liberais foram promulgadas.'};
+    if(g.fascistPolicies>=6) return {winner:'fascist', reason:'6 políticas Fascistas foram promulgadas.'};
+    return null;
   }
 
-  function handleLeave(){
-    stopPolling();
-    state = {
-      screen:'home', playerId:null, playerName:'', roomCode:null, isHost:false,
-      room:null, revealed:false, lastRoundId:null, error:'',
-      createCats:new Set(['animes','series','filmes','jogos']),
-      roundCatChoice:'random', joinName:'', joinCode:'', createName:'', busy:false
+  let hsRoomRef = null;
+  function hsStartListening(){
+    hsStopListening();
+    hsRoomRef = db.ref('hitler_rooms/'+state.hsRoomCode);
+    hsRoomRef.on('value', snap => {
+      const room = snap.val();
+      if(!room) return;
+      state.hsRoom = room;
+      hsMaybeResolveVote(room);
+      if(state.screen==='hs-lobby' || state.screen==='hs-game') render();
+      if(room.status==='playing' && state.screen==='hs-lobby') { state.screen='hs-game'; render(); }
+    });
+  }
+  function hsStopListening(){ if(hsRoomRef){ hsRoomRef.off(); hsRoomRef=null; } }
+
+  async function hsLoadRoom(code){
+    try{
+      const snap = await withTimeout(db.ref('hitler_rooms/'+code).once('value'), 8000);
+      return snap.val() || null;
+    }catch(e){ return null; }
+  }
+  async function hsUpdateGame(code, mutator){
+    const snap = await db.ref('hitler_rooms/'+code+'/game').once('value');
+    const g = snap.val();
+    if(!g) return;
+    mutator(g);
+    await db.ref('hitler_rooms/'+code+'/game').set(g);
+  }
+
+  async function hsHandleCreateRoom(){
+    const name = state.hsCreateName.trim();
+    if(!name){ state.error='Digite seu nome.'; render(); return; }
+    state.error=''; state.busy=true; render();
+    try{
+      const code = generateCode();
+      const roomRefNew = db.ref('hitler_rooms/'+code);
+      const playerRef = roomRefNew.child('players').push();
+      const pid = playerRef.key;
+      await withTimeout(roomRefNew.set({
+        code, hostId: pid, status:'lobby', game:null, createdAt: Date.now(),
+        players: { [pid]: { name, alive:true } }
+      }), 8000);
+      state.hsPlayerId = pid; state.hsPlayerName = name; state.hsRoomCode = code; state.hsIsHost = true;
+      state.busy = false; state.screen = 'hs-lobby'; render(); hsStartListening();
+    }catch(e){
+      state.error='Não deu pra criar a sala agora. Tente de novo.'; state.busy=false; render();
+    }
+  }
+
+  async function hsHandleJoinRoom(){
+    const name = state.hsJoinName.trim();
+    const code = state.hsJoinCode.trim().toUpperCase();
+    if(!name){ state.error='Digite seu nome.'; render(); return; }
+    if(!code){ state.error='Digite o código da sala.'; render(); return; }
+    state.busy=true; render();
+    const room = await hsLoadRoom(code);
+    if(!room){ state.error='Sala não encontrada. Confira o código.'; state.busy=false; render(); return; }
+    if(room.status==='playing'){ state.error='Essa partida já começou. Peça pro host iniciar uma nova.'; state.busy=false; render(); return; }
+    try{
+      const playerRef = db.ref('hitler_rooms/'+code+'/players').push();
+      const pid = playerRef.key;
+      await withTimeout(playerRef.set({ name, alive:true }), 8000);
+      state.hsPlayerId = pid; state.hsPlayerName = name; state.hsRoomCode = code; state.hsIsHost = false;
+      state.error=''; state.busy=false; state.screen='hs-lobby'; render(); hsStartListening();
+    }catch(e){
+      state.error='Não deu pra entrar agora. Tente de novo.'; state.busy=false; render();
+    }
+  }
+
+  async function hsStartGame(){
+    const code = state.hsRoomCode;
+    const room = await hsLoadRoom(code);
+    if(!room) return;
+    const ids = Object.keys(room.players||{});
+    const n = ids.length;
+    if(n<5 || n>10){ state.error='Hitler Secreto precisa de 5 a 10 jogadores.'; render(); return; }
+    state.error='';
+    const roles = hsAssignRoles(ids);
+    const order = shuffle(ids);
+    const deck = hsBuildDeck();
+    const game = {
+      totalPlayers:n, roles, order, deck, discard:[],
+      liberalPolicies:0, fascistPolicies:0,
+      presidentIndex:0, presidentId: order[0],
+      chancellorId:null, chancellorNomineeId:null,
+      lastPresidentId:null, lastChancellorId:null,
+      phase:'nomination', votes:{}, presidentCards:[], chancellorCards:[],
+      electionTracker:0, pendingPower:null, powerResult:null,
+      specialElectionActive:false, specialElectionReturnIndex:null,
+      investigatedIds:[], executedIds:[],
+      log:[(room.players[order[0]]?.name||'Alguém')+' é o primeiro Presidente. A partida começou!'],
+      winner:null, winReason:null
     };
+    await db.ref('hitler_rooms/'+code+'/game').set(game);
+    await db.ref('hitler_rooms/'+code+'/status').set('playing');
+  }
+
+  async function hsNominate(targetId){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    const targetName = room.players[targetId]?.name || '???';
+    const presName = room.players[room.game.presidentId]?.name || '???';
+    await hsUpdateGame(code, g=>{
+      g.chancellorNomineeId = targetId;
+      g.phase='voting';
+      g.votes={};
+      g.log.push(presName+' indicou '+targetName+' para Chanceler. Votação aberta!');
+    });
+  }
+
+  async function hsCastVote(vote){
+    const code = state.hsRoomCode;
+    await db.ref('hitler_rooms/'+code+'/game/votes/'+state.hsPlayerId).set(vote);
+  }
+
+  function hsMaybeResolveVote(room){
+    const g = room.game;
+    if(!g || g.phase!=='voting') return;
+    if(state.hsPlayerId !== g.presidentId) return;
+    if(state.hsResolving) return;
+    const aliveIds = Object.keys(room.players).filter(id=>room.players[id].alive);
+    const votes = g.votes||{};
+    const allVoted = aliveIds.every(id=> votes[id]!==undefined && votes[id]!==null);
+    if(!allVoted || aliveIds.length===0) return;
+    state.hsResolving = true;
+    hsResolveVote(room).finally(()=>{ state.hsResolving=false; });
+  }
+
+  async function hsResolveVote(room){
+    const code = state.hsRoomCode;
+    const playersMap = room.players;
+    await hsUpdateGame(code, g=>{
+      const aliveIds = Object.keys(playersMap).filter(id=>playersMap[id].alive);
+      const votes = g.votes||{};
+      let ja=0, nein=0;
+      aliveIds.forEach(id=>{ if(votes[id]) ja++; else nein++; });
+      const passed = ja>nein;
+      const chancellorName = playersMap[g.chancellorNomineeId]?.name || '???';
+      const presName = playersMap[g.presidentId]?.name || '???';
+      if(passed){
+        g.log.push('Votação: '+ja+' a favor, '+nein+' contra. Governo de '+presName+' e '+chancellorName+' aprovado!');
+        const hitlerId = Object.keys(g.roles).find(id=>g.roles[id]==='hitler');
+        if(g.fascistPolicies>=3 && g.chancellorNomineeId===hitlerId){
+          g.winner='fascist';
+          g.winReason=chancellorName+' era Hitler e foi eleito Chanceler com 3+ políticas Fascistas no poder!';
+          g.phase='gameover';
+          g.log.push('FIM DE JOGO: os Fascistas vencem!');
+          return;
+        }
+        g.chancellorId = g.chancellorNomineeId;
+        g.lastPresidentId = g.presidentId;
+        g.lastChancellorId = g.chancellorId;
+        g.electionTracker = 0;
+        hsEnsureDeck(g, 3);
+        g.presidentCards = g.deck.splice(0,3);
+        g.phase='legis_president';
+      } else {
+        g.log.push('Votação: '+ja+' a favor, '+nein+' contra. Governo rejeitado.');
+        g.electionTracker++;
+        g.chancellorNomineeId=null;
+        g.votes={};
+        if(g.electionTracker>=3){
+          hsEnsureDeck(g,1);
+          const card = g.deck.shift();
+          if(card==='liberal') g.liberalPolicies++; else g.fascistPolicies++;
+          g.log.push('3 governos seguidos rejeitados: a política do topo do baralho foi promulgada automaticamente ('+(card==='liberal'?'Liberal':'Fascista')+').');
+          g.electionTracker=0;
+          g.lastPresidentId=null;
+          g.lastChancellorId=null;
+          const winCheck = hsCheckPolicyWin(g);
+          if(winCheck){ g.winner=winCheck.winner; g.winReason=winCheck.reason; g.phase='gameover'; g.log.push('FIM DE JOGO!'); return; }
+        }
+        hsAdvancePresident(g, playersMap);
+        g.phase='nomination';
+      }
+    });
+  }
+
+  async function hsPresidentDiscard(discardIdx){
+    const code = state.hsRoomCode;
+    await hsUpdateGame(code, g=>{
+      const cards = g.presidentCards;
+      const discarded = cards[discardIdx];
+      const remaining = cards.filter((_,i)=>i!==discardIdx);
+      g.discard.push(discarded);
+      g.chancellorCards = remaining;
+      g.presidentCards = [];
+      g.phase='legis_chancellor';
+      g.log.push('O Presidente escolheu as políticas para o Chanceler.');
+    });
+  }
+
+  async function hsChancellorEnact(enactIdx){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    await hsUpdateGame(code, g=>{
+      const cards = g.chancellorCards;
+      const enacted = cards[enactIdx];
+      const discarded = cards[1-enactIdx];
+      g.discard.push(discarded);
+      g.chancellorCards = [];
+      if(enacted==='liberal') g.liberalPolicies++; else g.fascistPolicies++;
+      g.log.push(enacted==='liberal' ? 'Uma política Liberal foi promulgada.' : 'Uma política Fascista foi promulgada.');
+      const winCheck = hsCheckPolicyWin(g);
+      if(winCheck){ g.winner=winCheck.winner; g.winReason=winCheck.reason; g.phase='gameover'; g.log.push('FIM DE JOGO!'); return; }
+      if(enacted==='fascist'){
+        const power = hsPowerFor(g.totalPlayers, g.fascistPolicies);
+        if(power){
+          g.pendingPower = power;
+          g.phase = 'power_'+power;
+          g.log.push('Poder presidencial desbloqueado: '+hsPowerLabel(power)+'.');
+          return;
+        }
+      }
+      hsAdvancePresident(g, room.players);
+      g.phase='nomination';
+    });
+  }
+
+  async function hsPowerInvestigate(targetId){
+    const code = state.hsRoomCode;
+    await hsUpdateGame(code, g=>{
+      const role = g.roles[targetId];
+      const party = role==='liberal' ? 'liberal' : 'fascist';
+      g.powerResult = { type:'investigate', targetId, party };
+      g.investigatedIds = [...(g.investigatedIds||[]), targetId];
+      g.log.push('O Presidente investigou a lealdade de alguém em segredo.');
+    });
+  }
+  async function hsPowerInvestigateContinue(){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    await hsUpdateGame(code, g=>{
+      g.powerResult=null; g.pendingPower=null;
+      hsAdvancePresident(g, room.players);
+      g.phase='nomination';
+    });
+  }
+  async function hsPowerSpecialElection(targetId){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    const targetName = room.players[targetId]?.name || '???';
+    await hsUpdateGame(code, g=>{
+      g.specialElectionActive = true;
+      g.specialElectionReturnIndex = g.presidentIndex;
+      const idx = g.order.indexOf(targetId);
+      g.presidentIndex = idx;
+      g.presidentId = targetId;
+      g.pendingPower = null;
+      g.phase = 'nomination';
+      g.log.push('Eleição especial convocada: '+targetName+' será o próximo Presidente.');
+    });
+  }
+  async function hsPowerPeekContinue(){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    await hsUpdateGame(code, g=>{
+      g.pendingPower=null;
+      g.log.push('O Presidente espiou o topo do baralho.');
+      hsAdvancePresident(g, room.players);
+      g.phase='nomination';
+    });
+  }
+  async function hsPowerExecute(targetId){
+    const code = state.hsRoomCode;
+    const room = state.hsRoom;
+    const targetName = room.players[targetId]?.name || '???';
+    let wasHitler = false;
+    await hsUpdateGame(code, g=>{
+      g.executedIds = [...(g.executedIds||[]), targetId];
+      g.pendingPower = null;
+      if(g.roles[targetId]==='hitler'){
+        wasHitler = true;
+        g.winner='liberal';
+        g.winReason = targetName+' era Hitler e foi executado!';
+        g.phase='gameover';
+        g.log.push(targetName+' foi executado — era Hitler! FIM DE JOGO: os Liberais vencem!');
+        return;
+      }
+      g.log.push(targetName+' foi executado.');
+      hsAdvancePresident(g, room.players);
+      g.phase='nomination';
+    });
+    await db.ref('hitler_rooms/'+code+'/players/'+targetId+'/alive').set(false);
+  }
+
+  async function hsNewGame(){
+    const code = state.hsRoomCode;
+    const room = await hsLoadRoom(code);
+    if(!room) return;
+    const updates = {};
+    Object.keys(room.players).forEach(pid => { updates['players/'+pid+'/alive'] = true; });
+    updates['status'] = 'lobby';
+    updates['game'] = null;
+    await db.ref('hitler_rooms/'+code).update(updates);
+    state.screen='hs-lobby';
     render();
   }
 
-  function esc(s){
-    return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function handleLeaveHitler(){
+    hsStopListening();
+    state.screen='hub'; state.error=''; state.busy=false;
+    state.hsPlayerId=null; state.hsPlayerName=''; state.hsRoomCode=null; state.hsIsHost=false; state.hsRoom=null;
+    state.hsCreateName=''; state.hsJoinName=''; state.hsJoinCode=''; state.hsRoleOpen=false;
+    render();
   }
 
+  // ======================================================================
+  // RENDER — HUB
+  // ======================================================================
+  function renderHub(){
+    return `
+      <div class="brand"><div class="brand-title">GAME HUB</div></div>
+      <p class="tagline">Jogos sociais pra jogar com a galera, cada um no próprio celular. Escolha um jogo pra começar.</p>
+      <div class="stack">
+        <div class="game-card gc-impostor" id="hub-go-impostor">
+          <span class="gc-emoji">🎭</span>
+          <div class="gc-title">Impostor</div>
+          <div class="gc-desc">Um jogador não conhece a palavra secreta. Descubram quem é, com temas de animes, séries, filmes e jogos.</div>
+          <div class="gc-players">3+ JOGADORES</div>
+        </div>
+        <div class="game-card gc-hitler" id="hub-go-hitler">
+          <span class="gc-emoji">🎩</span>
+          <div class="gc-title">Hitler Secreto</div>
+          <div class="gc-desc">Liberais x Fascistas. Formem governos, promulguem políticas e descubram quem está escondendo o quê.</div>
+          <div class="gc-players">5 A 10 JOGADORES</div>
+        </div>
+      </div>
+      <div class="footer-note">Ambos rodam ao vivo entre os celulares da sala.</div>
+    `;
+  }
+
+  // ======================================================================
+  // RENDER — IMPOSTOR (igual antes)
+  // ======================================================================
   function renderHome(){
     return `
+      <button class="back-link" id="back-hub">‹ Hub de jogos</button>
       <div class="brand"><div class="brand-title">IMPOSTOR</div></div>
       <p class="tagline">Um do grupo não conhece a resposta. Descubra quem é — sem ninguém precisar dividir o celular.</p>
       <div class="home-hero">
@@ -645,7 +955,6 @@
         <button class="btn btn-primary" id="go-create">Criar sala</button>
         <button class="btn btn-ghost" id="go-join">Entrar em uma sala</button>
       </div>
-      <div class="footer-note">Jogo social — a conversa e a votação acontecem ao vivo, entre vocês.</div>
     `;
   }
 
@@ -776,49 +1085,458 @@
     `;
   }
 
+  // ======================================================================
+  // RENDER — HITLER SECRETO
+  // ======================================================================
+  function renderHsHome(){
+    return `
+      <button class="back-link" id="back-hub">‹ Hub de jogos</button>
+      <div class="brand"><div class="brand-title">HITLER SECRETO</div></div>
+      <p class="tagline">Liberais tentam promulgar políticas boas. Fascistas trabalham em segredo — e um deles é Hitler.</p>
+      <div class="home-hero">
+        <div class="masks">🎩</div>
+        <h2 style="font-size:20px;">5 a 10 jogadores, papéis secretos</h2>
+        <p>Formem governos por votação, promulguem políticas e usem os poderes presidenciais pra desmascarar o time Fascista — ou escondam bem seus segredos.</p>
+      </div>
+      <div class="stack" style="margin-top:18px;">
+        <button class="btn btn-primary" id="hs-go-create">Criar sala</button>
+        <button class="btn btn-ghost" id="hs-go-join">Entrar em uma sala</button>
+      </div>
+    `;
+  }
+
+  function renderHsCreate(){
+    return `
+      <button class="back-link" id="hs-back-home">‹ Voltar</button>
+      <h2 style="font-size:24px;margin-bottom:18px;">Criar sala</h2>
+      <div class="stack">
+        <div>
+          <label class="field-label">Seu nome</label>
+          <input type="text" id="hs-create-name" placeholder="Como te chamam?" value="${esc(state.hsCreateName)}">
+        </div>
+        ${state.error ? `<div class="error-text">${esc(state.error)}</div>` : ''}
+        <button class="btn btn-primary" id="hs-submit-create" ${state.busy?'disabled':''}>${state.busy?'Criando...':'Criar sala e convidar'}</button>
+      </div>
+    `;
+  }
+
+  function renderHsJoin(){
+    return `
+      <button class="back-link" id="hs-back-home">‹ Voltar</button>
+      <h2 style="font-size:24px;margin-bottom:18px;">Entrar em uma sala</h2>
+      <div class="stack">
+        <div>
+          <label class="field-label">Código da sala</label>
+          <input type="text" id="hs-join-code" placeholder="Ex: 7X4KQ" maxlength="8" style="text-transform:uppercase;letter-spacing:3px;" value="${esc(state.hsJoinCode)}">
+        </div>
+        <div>
+          <label class="field-label">Seu nome</label>
+          <input type="text" id="hs-join-name" placeholder="Como te chamam?" value="${esc(state.hsJoinName)}">
+        </div>
+        ${state.error ? `<div class="error-text">${esc(state.error)}</div>` : ''}
+        <button class="btn btn-primary" id="hs-submit-join" ${state.busy?'disabled':''}>${state.busy?'Entrando...':'Entrar na sala'}</button>
+      </div>
+    `;
+  }
+
+  function renderHsLobby(){
+    const room = state.hsRoom;
+    const players = room.players || {};
+    const ids = Object.keys(players);
+    return `
+      <div class="brand">
+        <div class="brand-title" style="font-size:22px;">HITLER SECRETO</div>
+        <button class="back-link" style="padding:0;" id="hs-leave-room">Sair</button>
+      </div>
+      <div class="ticket">
+        <div class="lbl">CÓDIGO DA SALA</div>
+        <div class="code">${esc(room.code)}</div>
+      </div>
+      <div class="section-title">JOGADORES (${ids.length}/10)</div>
+      <div class="player-list">
+        ${ids.map(pid=>`
+          <div class="player-row">
+            <span class="dot"></span>${esc(players[pid].name)}
+            ${pid===room.hostId?'<span class="host-tag">HOST</span>':''}
+          </div>`).join('')}
+      </div>
+      ${state.hsIsHost ? `
+        ${state.error ? `<div class="error-text" style="margin-top:14px;">${esc(state.error)}</div>` : ''}
+        <div style="margin-top:14px;">
+          <button class="btn btn-primary" id="hs-start-game" ${ids.length<5||ids.length>10?'disabled':''}>Iniciar partida</button>
+        </div>
+        <div class="hint">Precisa de 5 a 10 jogadores. Papéis são sorteados na hora.</div>
+      ` : `
+        <div class="waiting-box"><span class="pulse"></span>Aguardando o host iniciar a partida...</div>
+      `}
+    `;
+  }
+
+  function hsRoleTeamInfo(g, viewerId){
+    const myRole = g.roles[viewerId];
+    const room = state.hsRoom;
+    const nameOf = id => room.players[id]?.name || '???';
+    if(myRole==='liberal'){
+      return { label:'LIBERAL', cls:'liberal', extra:'Você não sabe quem mais é quem. Observe as votações e as políticas promulgadas.' };
+    }
+    const hitlerId = Object.keys(g.roles).find(id=>g.roles[id]==='hitler');
+    const fascistIds = Object.keys(g.roles).filter(id=>g.roles[id]==='fascist');
+    if(myRole==='fascist'){
+      const teammates = fascistIds.filter(id=>id!==viewerId).map(nameOf);
+      let extra = 'Hitler é <b>'+esc(nameOf(hitlerId))+'</b>.';
+      if(teammates.length) extra += ' Fascistas com você: '+teammates.map(esc).join(', ')+'.';
+      return { label:'FASCISTA', cls:'fascist', extra };
+    }
+    // hitler
+    if(g.totalPlayers<=6){
+      const teammates = fascistIds.map(nameOf);
+      const extra = teammates.length ? 'Seus fascistas: '+teammates.map(esc).join(', ')+'.' : 'Você não tem companheiros fascistas nessa partida.';
+      return { label:'HITLER', cls:'hitler', extra };
+    }
+    return { label:'HITLER', cls:'hitler', extra:'Em partidas de 7+ jogadores, você não sabe quem são os outros Fascistas. Aja com cautela.' };
+  }
+
+  function renderHsBoard(room){
+    const g = room.game;
+    const n = g.totalPlayers;
+    const fasSlots = 6;
+    const libSlots = 5;
+    const libHtml = Array.from({length:libSlots}).map((_,i)=>{
+      const filled = i < g.liberalPolicies;
+      return `<div class="hs-slot ${filled?'filled-lib':''}">${filled?'📘':''}</div>`;
+    }).join('');
+    const fasHtml = Array.from({length:fasSlots}).map((_,i)=>{
+      const filled = i < g.fascistPolicies;
+      const power = hsPowerFor(n, i+1);
+      const icon = power ? { investigate:'🔍', special_election:'🗳️', execution:'💀', peek:'👁️' }[power] : '';
+      return `<div class="hs-slot ${filled?'filled-fas':''}">${filled?'📕':''}${icon?`<span class="pwr-icon">${icon}</span>`:''}</div>`;
+    }).join('');
+    const trackerDots = [0,1,2].map(i=>`<span class="td ${i<g.electionTracker?'on':''}"></span>`).join('');
+    const roster = g.order.map(pid=>{
+      const p = room.players[pid];
+      if(!p) return '';
+      const isPres = g.presidentId===pid && g.phase!=='gameover';
+      const isChan = (g.chancellorId===pid || g.chancellorNomineeId===pid) && (g.phase==='voting'||g.phase==='legis_president'||g.phase==='legis_chancellor');
+      let tag = '';
+      if(g.phase==='gameover'){
+        const r = g.roles[pid];
+        tag = `<span class="role-tag">${r==='liberal'?'LIBERAL':(r==='hitler'?'HITLER':'FASCISTA')}</span>`;
+      } else if(isPres){ tag = '<span class="host-tag">PRESIDENTE</span>'; }
+      else if(isChan){ tag = '<span class="host-tag" style="color:var(--cyan);">CHANCELER</span>'; }
+      return `<div class="player-row ${p.alive?'':'dead'}"><span class="dot"></span>${esc(p.name)}${tag}</div>`;
+    }).join('');
+    return `
+      <div class="hs-tracks">
+        <div class="hs-track-row"><div class="hs-track-label">LIBERAL</div><div class="hs-track">${libHtml}</div></div>
+        <div class="hs-track-row"><div class="hs-track-label">FASCISTA</div><div class="hs-track">${fasHtml}</div></div>
+      </div>
+      <div class="hs-tracker">${trackerDots}<span class="hint" style="margin:0;">eleições rejeitadas</span></div>
+      <div class="section-title">JOGADORES</div>
+      <div class="hs-roster">${roster}</div>
+      <div class="section-title">HISTÓRICO</div>
+      <div class="hs-log">${g.log.slice(-12).reverse().map(l=>`<div>${esc(l)}</div>`).join('')}</div>
+    `;
+  }
+
+  function renderHsRolePanel(room){
+    const g = room.game;
+    const info = hsRoleTeamInfo(g, state.hsPlayerId);
+    return `
+      <div class="hs-role-panel" id="hs-role-toggle">
+        <div class="hs-role-head"><span>🎭 Meu papel</span><span>${state.hsRoleOpen?'▲':'▼'}</span></div>
+        ${state.hsRoleOpen ? `
+          <div class="hs-role-body">
+            <div class="hs-role-big ${info.cls}">${info.label}</div>
+            <div class="hs-team-list">${info.extra}</div>
+          </div>
+        ` : ''}
+      </div>
+    `;
+  }
+
+  function renderHsGame(){
+    const room = state.hsRoom;
+    const g = room.game;
+    if(!g) return renderHsLobby();
+    if(g.phase==='gameover') return renderHsGameover(room);
+
+    const iAmAlive = room.players[state.hsPlayerId]?.alive;
+    const iAmPresident = g.presidentId===state.hsPlayerId;
+    const iAmChancellorNominee = g.chancellorNomineeId===state.hsPlayerId;
+    let phaseHtml = '';
+
+    if(!iAmAlive){
+      phaseHtml = `<div class="waiting-box">💀 Você foi executado. Continue acompanhando a partida como espectador.</div>`;
+    } else if(g.phase==='nomination'){
+      if(iAmPresident){
+        const options = hsEligibleChancellors(g, room.players);
+        phaseHtml = `
+          <div class="section-title">ESCOLHA SEU CHANCELER</div>
+          ${options.map(id=>`<button class="hs-pick-btn" data-nominate="${id}">${esc(room.players[id].name)}</button>`).join('')}
+          ${options.length===0?'<div class="hint">Nenhum jogador elegível (isso não deveria acontecer).</div>':''}
+        `;
+      } else {
+        const presName = room.players[g.presidentId]?.name || '???';
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>${esc(presName)} está escolhendo um Chanceler...</div>`;
+      }
+    } else if(g.phase==='voting'){
+      const already = g.votes && g.votes[state.hsPlayerId]!==undefined;
+      const chancellorName = room.players[g.chancellorNomineeId]?.name || '???';
+      const presName = room.players[g.presidentId]?.name || '???';
+      if(already){
+        const votedCount = Object.keys(g.votes||{}).length;
+        const aliveCount = Object.values(room.players).filter(p=>p.alive).length;
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>Voto registrado. Aguardando outros jogadores (${votedCount}/${aliveCount})...</div>`;
+      } else {
+        phaseHtml = `
+          <div class="section-title">VOTAÇÃO DO GOVERNO</div>
+          <div class="hint" style="margin-bottom:10px;">Presidente: <b>${esc(presName)}</b> · Chanceler indicado: <b>${esc(chancellorName)}</b></div>
+          <div class="btn-block-2">
+            <button class="btn btn-primary" id="hs-vote-ja">✔️ Ja!</button>
+            <button class="btn btn-ghost" id="hs-vote-nein">✖️ Nein!</button>
+          </div>
+        `;
+      }
+    } else if(g.phase==='legis_president'){
+      if(iAmPresident){
+        phaseHtml = `
+          <div class="section-title">ESCOLHA UMA POLÍTICA PRA DESCARTAR</div>
+          <div class="hs-card-choice">
+            ${g.presidentCards.map((c,i)=>`<div class="hs-policy-card ${c}" data-discard="${i}">${c==='liberal'?'📘 Liberal':'📕 Fascista'}</div>`).join('')}
+          </div>
+          <div class="hint">As outras 2 vão pro Chanceler. Uma delas será promulgada.</div>
+        `;
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Presidente está escolhendo as políticas...</div>`;
+      }
+    } else if(g.phase==='legis_chancellor'){
+      if(iAmChancellorNominee){
+        phaseHtml = `
+          <div class="section-title">ESCOLHA UMA POLÍTICA PRA PROMULGAR</div>
+          <div class="hs-card-choice">
+            ${g.chancellorCards.map((c,i)=>`<div class="hs-policy-card ${c}" data-enact="${i}">${c==='liberal'?'📘 Liberal':'📕 Fascista'}</div>`).join('')}
+          </div>
+          <div class="hint">A outra será descartada em segredo.</div>
+        `;
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Chanceler está escolhendo a política...</div>`;
+      }
+    } else if(g.phase==='power_investigate'){
+      if(iAmPresident){
+        if(g.powerResult){
+          const targetName = room.players[g.powerResult.targetId]?.name || '???';
+          phaseHtml = `
+            <div class="section-title">RESULTADO DA INVESTIGAÇÃO</div>
+            <div class="answer-banner"><b>${esc(targetName)}</b> é <b>${g.powerResult.party==='liberal'?'LIBERAL':'FASCISTA'}</b>.</div>
+            <div style="margin-top:12px;"><button class="btn btn-primary" id="hs-power-continue">Continuar</button></div>
+          `;
+        } else {
+          const options = Object.keys(room.players).filter(id=>room.players[id].alive && id!==state.hsPlayerId && !(g.investigatedIds||[]).includes(id));
+          phaseHtml = `
+            <div class="section-title">🔍 INVESTIGAR LEALDADE</div>
+            ${options.map(id=>`<button class="hs-pick-btn" data-investigate="${id}">${esc(room.players[id].name)}</button>`).join('')}
+          `;
+        }
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Presidente está usando um poder: 🔍 Investigar lealdade...</div>`;
+      }
+    } else if(g.phase==='power_special_election'){
+      if(iAmPresident){
+        const options = Object.keys(room.players).filter(id=>room.players[id].alive && id!==state.hsPlayerId);
+        phaseHtml = `
+          <div class="section-title">🗳️ ELEIÇÃO ESPECIAL</div>
+          <div class="hint" style="margin-bottom:10px;">Escolha quem será o próximo Presidente.</div>
+          ${options.map(id=>`<button class="hs-pick-btn" data-special="${id}">${esc(room.players[id].name)}</button>`).join('')}
+        `;
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Presidente está usando um poder: 🗳️ Eleição especial...</div>`;
+      }
+    } else if(g.phase==='power_peek'){
+      if(iAmPresident){
+        const top3 = g.deck.slice(0,3);
+        phaseHtml = `
+          <div class="section-title">👁️ ESPIANDO O BARALHO</div>
+          <div class="hs-card-choice">
+            ${top3.map(c=>`<div class="hs-policy-card ${c}" style="cursor:default;">${c==='liberal'?'📘 Liberal':'📕 Fascista'}</div>`).join('')}
+          </div>
+          <div style="margin-top:12px;"><button class="btn btn-primary" id="hs-power-continue">Continuar</button></div>
+        `;
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Presidente está usando um poder: 👁️ Espiar o baralho...</div>`;
+      }
+    } else if(g.phase==='power_execution'){
+      if(iAmPresident){
+        const options = Object.keys(room.players).filter(id=>room.players[id].alive && id!==state.hsPlayerId);
+        phaseHtml = `
+          <div class="section-title">💀 EXECUÇÃO</div>
+          <div class="hint" style="margin-bottom:10px;">Escolha quem será eliminado da partida.</div>
+          ${options.map(id=>`<button class="hs-pick-btn" data-execute="${id}">${esc(room.players[id].name)}</button>`).join('')}
+        `;
+      } else {
+        phaseHtml = `<div class="waiting-box"><span class="pulse"></span>O Presidente está usando um poder: 💀 Execução...</div>`;
+      }
+    }
+
+    return `
+      <div class="brand">
+        <div class="brand-title" style="font-size:20px;">HITLER SECRETO</div>
+        <div class="brand-code">${esc(room.code)}</div>
+      </div>
+      ${iAmAlive ? renderHsRolePanel(room) : ''}
+      ${phaseHtml}
+      <div class="section-title" style="margin-top:26px;">TABULEIRO</div>
+      ${renderHsBoard(room)}
+    `;
+  }
+
+  function renderHsGameover(room){
+    const g = room.game;
+    const win = g.winner;
+    const roleName = r => r==='liberal'?'Liberal':(r==='hitler'?'Hitler':'Fascista');
+    return `
+      <div class="brand">
+        <div class="brand-title" style="font-size:20px;">HITLER SECRETO</div>
+        <button class="back-link" style="padding:0;" id="hs-leave-room">Sair</button>
+      </div>
+      <div class="hs-gameover-banner win-${win}">
+        <div class="gg-title">${win==='liberal'?'🕊️ OS LIBERAIS VENCEM' : '🎩 OS FASCISTAS VENCEM'}</div>
+        <p>${esc(g.winReason||'')}</p>
+      </div>
+      <div class="section-title">TODOS OS PAPÉIS</div>
+      <div class="player-list">
+        ${g.order.map(pid=>{
+          const p = room.players[pid]; if(!p) return '';
+          const r = g.roles[pid];
+          return `<div class="player-row ${p.alive?'':'dead'}"><span class="dot"></span>${esc(p.name)}<span class="role-tag">${roleName(r).toUpperCase()}</span></div>`;
+        }).join('')}
+      </div>
+      ${state.hsIsHost ? `
+        <div style="margin-top:16px;"><button class="btn btn-primary" id="hs-new-game">Nova partida</button></div>
+      ` : `<div class="hint">Aguardando o host começar uma nova partida...</div>`}
+    `;
+  }
+
+  // ======================================================================
+  // RENDER DISPATCH
+  // ======================================================================
   function render(){
     const app = document.getElementById('app');
+    const appOuter = document.getElementById('app-outer');
     let html = '';
-    if(state.screen==='home') html = renderHome();
+    let isHs = false;
+
+    if(NEEDS_SETUP){
+      html = renderSetupNeeded();
+    } else if(state.screen==='hub') html = renderHub();
+    else if(state.screen==='home') html = renderHome();
     else if(state.screen==='create') html = renderCreate();
     else if(state.screen==='join') html = renderJoin();
     else if(state.screen==='lobby' && state.room) html = renderLobby();
     else if(state.screen==='reveal' && state.room) html = renderReveal();
-    else html = renderHome();
+    else if(state.screen==='hs-home'){ html = renderHsHome(); isHs = true; }
+    else if(state.screen==='hs-create'){ html = renderHsCreate(); isHs = true; }
+    else if(state.screen==='hs-join'){ html = renderHsJoin(); isHs = true; }
+    else if(state.screen==='hs-lobby' && state.hsRoom){ html = renderHsLobby(); isHs = true; }
+    else if(state.screen==='hs-game' && state.hsRoom){ html = renderHsGame(); isHs = true; }
+    else html = renderHub();
+
+    appOuter.className = isHs ? 'theme-hs' : '';
     app.innerHTML = html;
     bindEvents();
   }
 
+  function renderSetupNeeded(){
+    return `
+      <div class="brand"><div class="brand-title" style="font-size:24px;">GAME HUB</div></div>
+      <div class="setup-box">
+        <h2>Falta configurar o backend</h2>
+        <p>Esse hub precisa de um banco de dados real pra sincronizar as salas entre celulares diferentes. É rápido e gratuito:</p>
+        <ol>
+          <li>Acesse <code>console.firebase.google.com</code> e crie um projeto novo.</li>
+          <li>Vá em <b>Build → Realtime Database</b> → <b>Criar banco de dados</b> → <b>modo de teste</b>.</li>
+          <li>Em <b>⚙️ Configurações do projeto</b> → "Seus apps" → clique em <code>&lt;/&gt;</code> (Web) pra registrar um app.</li>
+          <li>Copie o objeto <code>firebaseConfig</code>.</li>
+          <li>Cole no início do <code>&lt;script&gt;</code> deste arquivo, no lugar dos valores de exemplo.</li>
+        </ol>
+        <p>Salve, suba pro GitHub e o hub passa a funcionar entre qualquer celular.</p>
+      </div>
+    `;
+  }
+
+  // ======================================================================
+  // EVENTOS
+  // ======================================================================
   function bindEvents(){
+    if(NEEDS_SETUP) return;
     const $ = id => document.getElementById(id);
 
+    // Hub
+    if($('hub-go-impostor')) $('hub-go-impostor').onclick = () => { state.screen='home'; state.error=''; render(); };
+    if($('hub-go-hitler')) $('hub-go-hitler').onclick = () => { state.screen='hs-home'; state.error=''; render(); };
+    if($('back-hub')) $('back-hub').onclick = () => { state.screen='hub'; state.error=''; render(); };
+    if($('hs-back-home')) $('hs-back-home').onclick = () => { state.screen='hs-home'; state.error=''; render(); };
+
+    // Impostor
     if($('go-create')) $('go-create').onclick = () => { state.screen='create'; state.error=''; render(); };
     if($('go-join')) $('go-join').onclick = () => { state.screen='join'; state.error=''; render(); };
     if($('back-home')) $('back-home').onclick = () => { state.screen='home'; state.error=''; render(); };
-
     if($('create-name')) $('create-name').oninput = e => { state.createName = e.target.value; };
     document.querySelectorAll('.chip').forEach(el=>{
       el.onclick = () => {
         const cat = el.getAttribute('data-cat');
-        if(state.createCats.has(cat)) state.createCats.delete(cat);
-        else state.createCats.add(cat);
+        if(state.createCats.has(cat)) state.createCats.delete(cat); else state.createCats.add(cat);
         render();
       };
     });
     if($('submit-create')) $('submit-create').onclick = handleCreateRoom;
-
     if($('join-code')) $('join-code').oninput = e => { state.joinCode = e.target.value; };
     if($('join-name')) $('join-name').oninput = e => { state.joinName = e.target.value; };
     if($('submit-join')) $('submit-join').onclick = handleJoinRoom;
-
-    if($('leave-room')) $('leave-room').onclick = handleLeave;
+    if($('leave-room')) $('leave-room').onclick = handleLeaveImpostor;
     if($('round-cat')) $('round-cat').onchange = e => { state.roundCatChoice = e.target.value; };
     if($('start-round')) $('start-round').onclick = handleStartRound;
-
     if($('flip-card')) $('flip-card').onclick = () => { state.revealed = !state.revealed; render(); };
     if($('hide-card')) $('hide-card').onclick = () => { state.revealed = false; render(); };
     if($('reveal-answer')) $('reveal-answer').onclick = handleRevealAnswer;
     if($('new-round')) $('new-round').onclick = handleNewRound;
+
+    // Hitler Secreto
+    if($('hs-go-create')) $('hs-go-create').onclick = () => { state.screen='hs-create'; state.error=''; render(); };
+    if($('hs-go-join')) $('hs-go-join').onclick = () => { state.screen='hs-join'; state.error=''; render(); };
+    if($('hs-create-name')) $('hs-create-name').oninput = e => { state.hsCreateName = e.target.value; };
+    if($('hs-submit-create')) $('hs-submit-create').onclick = hsHandleCreateRoom;
+    if($('hs-join-code')) $('hs-join-code').oninput = e => { state.hsJoinCode = e.target.value; };
+    if($('hs-join-name')) $('hs-join-name').oninput = e => { state.hsJoinName = e.target.value; };
+    if($('hs-submit-join')) $('hs-submit-join').onclick = hsHandleJoinRoom;
+    if($('hs-leave-room')) $('hs-leave-room').onclick = handleLeaveHitler;
+    if($('hs-start-game')) $('hs-start-game').onclick = hsStartGame;
+    if($('hs-role-toggle')) $('hs-role-toggle').onclick = () => { state.hsRoleOpen = !state.hsRoleOpen; render(); };
+    if($('hs-vote-ja')) $('hs-vote-ja').onclick = () => hsCastVote(true).then(()=>render());
+    if($('hs-vote-nein')) $('hs-vote-nein').onclick = () => hsCastVote(false).then(()=>render());
+    if($('hs-power-continue')) $('hs-power-continue').onclick = () => {
+      const g = state.hsRoom.game;
+      if(g.phase==='power_investigate') hsPowerInvestigateContinue();
+      else if(g.phase==='power_peek') hsPowerPeekContinue();
+    };
+    if($('hs-new-game')) $('hs-new-game').onclick = hsNewGame;
+    document.querySelectorAll('[data-nominate]').forEach(el=>{
+      el.onclick = () => hsNominate(el.getAttribute('data-nominate'));
+    });
+    document.querySelectorAll('[data-discard]').forEach(el=>{
+      el.onclick = () => hsPresidentDiscard(parseInt(el.getAttribute('data-discard'),10));
+    });
+    document.querySelectorAll('[data-enact]').forEach(el=>{
+      el.onclick = () => hsChancellorEnact(parseInt(el.getAttribute('data-enact'),10));
+    });
+    document.querySelectorAll('[data-investigate]').forEach(el=>{
+      el.onclick = () => hsPowerInvestigate(el.getAttribute('data-investigate'));
+    });
+    document.querySelectorAll('[data-special]').forEach(el=>{
+      el.onclick = () => hsPowerSpecialElection(el.getAttribute('data-special'));
+    });
+    document.querySelectorAll('[data-execute]').forEach(el=>{
+      el.onclick = () => hsPowerExecute(el.getAttribute('data-execute'));
+    });
   }
 
   render();
