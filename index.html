@@ -512,6 +512,22 @@
     state.room = room; state.lastRoundId = room.round.roundId; state.revealed = false; render();
   }
 
+  async function startImpostorVote(){
+    const room = await loadRoom(state.roomCode) || state.room;
+    if(!room || !room.round) return;
+    room.round.votingOpen = true;
+    room.round.votes = {};
+    await saveRoom(room);
+    state.room = room; render();
+  }
+  async function castImpostorVote(targetId){
+    const room = await loadRoom(state.roomCode) || state.room;
+    if(!room || !room.round || !room.round.votingOpen) return;
+    room.round.votes = room.round.votes || {};
+    room.round.votes[state.playerId] = targetId;
+    await saveRoom(room);
+    state.room = room; render();
+  }
   async function handleRevealAnswer(){
     const room = await loadRoom(state.roomCode) || state.room;
     if(room.round) room.round.answerRevealed = true;
@@ -1064,7 +1080,7 @@
             <div class="cat-tag">${meta.emoji} ${meta.label}</div>
             ${isImpostor
               ? `<div class="word-big">VOCÊ É O IMPOSTOR</div>
-                 <div class="flavor">Você não sabe a palavra secreta. Preste atenção nas dicas dos outros e tente se disfarçar!</div>`
+                 <div class="flavor">Você não sabe a palavra secreta. Preste atenção nas dicas dos outros e tente se disfarçar!<br><br><b>Dica:</b> ${({animes:"É uma obra de animação japonesa.",series:"É uma produção dividida em episódios.",filmes:"É uma obra cinematográfica.",jogos:"É uma experiência interativa."})[round.category]}</div>`
               : `<div class="word-big">${esc(round.word)}</div>
                  <div class="flavor">Dê dicas sobre essa palavra sem dizer o nome. Um jogador não sabe qual é — descubram quem!</div>`
             }
@@ -1075,8 +1091,15 @@
       ${round.answerRevealed ? `
         <div class="answer-banner">🏆 O impostor era <b>${esc(round.impostorName)}</b> — a palavra era <b>${esc(round.word)}</b>.</div>
       ` : ''}
+      ${round.votingOpen ? `
+        <div class="section-title">VOTAÇÃO — QUEM É O IMPOSTOR?</div>
+        ${Object.values(round.votes||{}).length ? `<div class="hint">Votos registrados: ${Object.keys(round.votes||{}).length}/${room.players.length}</div>` : ''}
+        <div class="stack">${room.players.map(p=>`<button class="hs-pick-btn" data-impostor-vote="${p.id}" ${round.votes&&round.votes[state.playerId]?'disabled':''}>${esc(p.name)}${Object.values(round.votes||{}).filter(v=>v===p.id).length ? ` · ${Object.values(round.votes||{}).filter(v=>v===p.id).length} voto(s)` : ''}</button>`).join('')}</div>
+        ${round.votes&&round.votes[state.playerId] ? `<div class="hint">Seu voto foi registrado.</div>` : ''}
+      ` : ''}
       ${state.isHost ? `
         <div class="host-controls">
+          ${!round.votingOpen && !round.answerRevealed ? `<button class="btn btn-primary btn-sm" id="open-impostor-vote">Abrir votação</button>` : ''}
           ${!round.answerRevealed ? `<button class="btn btn-gold btn-sm" id="reveal-answer">Revelar impostor</button>` : ''}
           <button class="btn btn-ghost btn-sm" id="new-round">Nova rodada</button>
         </div>
@@ -1498,6 +1521,8 @@
     if($('flip-card')) $('flip-card').onclick = () => { state.revealed = !state.revealed; render(); };
     if($('hide-card')) $('hide-card').onclick = () => { state.revealed = false; render(); };
     if($('reveal-answer')) $('reveal-answer').onclick = handleRevealAnswer;
+    if($('open-impostor-vote')) $('open-impostor-vote').onclick = startImpostorVote;
+    document.querySelectorAll('[data-impostor-vote]').forEach(el=>{ el.onclick = () => castImpostorVote(el.getAttribute('data-impostor-vote')); });
     if($('new-round')) $('new-round').onclick = handleNewRound;
 
     // Hitler Secreto
